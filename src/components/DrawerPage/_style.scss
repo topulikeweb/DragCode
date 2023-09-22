@@ -1,0 +1,9 @@
+@import "../../styles/variables";
+
+.drawerPage {
+  flex: 4;
+  margin: 20px;
+  border-radius: 15px;
+  height: 85vh;
+  background-color: $containerDarkBackGroundColor;
+}

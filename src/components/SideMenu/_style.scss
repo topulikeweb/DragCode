@@ -1,0 +1,27 @@
+@import "../../styles/variables";
+
+.basicCom {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.sideContainer {
+  flex: 1;
+}
+
+.sideBtn {
+  width: $buttonWidth;
+  height: $buttonHeight;
+  background-color: #eeeded;
+  text-align: center;
+  line-height: $buttonHeight;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  font-size: 10px;
+}
+
+.sideBtn:hover {
+  border: 1px dotted $borderColor;
+}

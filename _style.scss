@@ -1,0 +1,54 @@
+@import "src/styles/variables";
+@import 'element-plus/dist/index.css';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.dark {
+  background-color: $darkBackGroundColor;
+  color: #fff9dc;
+
+  button {
+    background-color: $darkButtonBackGroundColor;
+    border: transparent;
+    color: $darkButtonFontColor;
+  }
+
+  .topContainer {
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+    height: 5.5vh;
+    border-bottom: #525252 1px solid;
+  }
+
+  .sideBtn {
+    background-color: $darkButtonBackGroundColor;
+  }
+
+  .topContainer {
+    background-color: #7373fa;
+  }
+
+  .sideContainer {
+    background-color: #363636;
+  }
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 5vh;
+  border-bottom: $containerBackGroundColor 1px solid;
+}

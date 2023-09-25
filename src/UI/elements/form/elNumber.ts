@@ -2,9 +2,10 @@ import { IComponentType } from '../../../../type';
 import { EditPen } from '@element-plus/icons-vue';
 
 export default <IComponentType>{
-  tag: 'el-Number',
+  tag: 'el-input-number',
   text: '数字框',
   _ID: '',
-  icon: EditPen,
+  tagIcon: EditPen,
   attrs: {},
+  defaultValue: 1,
 };

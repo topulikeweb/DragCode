@@ -16,5 +16,6 @@ for (const module of Object.values(files)) {
 files = import.meta.globEager('./elements/form/*.ts');
 
 for (const module of Object.values(files)) {
+  console.log(module);
   elements.form.list.push(module.default);
 }

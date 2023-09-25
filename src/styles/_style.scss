@@ -1,5 +1,5 @@
-@import "src/styles/variables";
-@import 'element-plus/dist/index.css';
+@import "variables";
+
 
 * {
   margin: 0;
@@ -21,19 +21,28 @@
     justify-content: space-around;
     width: 100vw;
     height: 5.5vh;
-    border-bottom: #525252 1px solid;
+    border-bottom: $containerDarkBackGroundColor 1px solid;
   }
 
   .sideBtn {
-    background-color: $darkButtonBackGroundColor;
+    background-color: $darkButtonBackGroundColor2;
+    color: #3f455b;
   }
 
   .topContainer {
-    background-color: #7373fa;
+    background-color: #3f455b;
   }
 
   .sideContainer {
-    background-color: #363636;
+    background-color: $containerDarkBackGroundColor;
+  }
+
+  .drawerPage {
+    background-color: $containerDarkBackGroundColor;
+  }
+
+  .attrsMenus {
+    background-color: $containerDarkBackGroundColor;
   }
 }
 

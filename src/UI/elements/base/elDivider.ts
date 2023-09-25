@@ -1,10 +1,11 @@
 import { IComponentType } from '../../../../type';
 import { Minus } from '@element-plus/icons-vue';
+import { helper_getRandomStr } from '../../helper.ts';
 
 export default <IComponentType>{
-  _ID: '',
+  _ID: helper_getRandomStr(),
   text: '分割线',
-  icon: Minus,
+  tagIcon: Minus,
   tag: 'el-divider',
   attrs: {},
 };

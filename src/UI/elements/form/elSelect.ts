@@ -1,10 +1,13 @@
 import { IComponentType } from '../../../../type';
 import { Document } from '@element-plus/icons-vue';
+import { helper_getRandomStr, helper_opt } from '../../helper.ts';
 
 export default <IComponentType>{
-  _ID: '',
+  tag: 'el-select',
   text: 'select选择',
-  icon: Document,
-  tag: 'el-radio',
+  _ID: helper_getRandomStr(),
+  defaultValue: '',
+  tagIcon: Document,
+  _opt_: helper_opt('select选择框', 'el-option'),
   attrs: {},
 };

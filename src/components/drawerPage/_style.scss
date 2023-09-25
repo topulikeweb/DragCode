@@ -1,0 +1,16 @@
+@import "../../styles/variables";
+
+.drawerPage {
+  flex: 4.3;
+  margin: 15px;
+  border-radius: 5px;
+  min-height: 85vh;
+  overflow: scroll;
+  background-color: $containerBackGroundColor;
+}
+
+.elementComponent {
+  //height: 5vh;
+  margin-top: 20px;
+  margin-left: 10px;
+}

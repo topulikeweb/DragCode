@@ -11,15 +11,17 @@
     </div>
     <SideMenu />
     <DrawerPage />
+    <AttrsMenus />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core';
-import Toolbar from './components/toolbar/toolbar.vue';
 import { ref } from 'vue';
-import SideMenu from './components/SideMenu/SideMenu.vue';
-import DrawerPage from './components/DrawerPage/DrawerPage.vue';
+import Toolbar from './components/toolbar/toolbar.vue';
+import SideMenu from './components/sideMenu/sideMenu.vue';
+import DrawerPage from './components/drawerPage/drawerPage.vue';
+import AttrsMenus from './components/attrsMenus/attrsMenus.vue';
 
 let theme = ref<boolean>(false);
 const isDark = useDark();
@@ -33,5 +35,5 @@ const handleToggleDark = () => {
 </script>
 
 <style>
-@import '_style.scss';
+@import './styles/_style.scss';
 </style>

@@ -6,5 +6,6 @@ export default <IComponentType>{
   text: '单选框',
   tagIcon: Pointer,
   tag: 'el-radio',
+  isShowPointer: false,
   attrs: {},
 };

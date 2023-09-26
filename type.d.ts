@@ -10,6 +10,7 @@ export interface IComponentType {
   defaultValue?: any;
   attrs: {};
   text: string;
+  isShowPointer: boolean;
   _opt_?: {
     label: string;
     _val_: {

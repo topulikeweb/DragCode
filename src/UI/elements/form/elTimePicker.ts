@@ -6,5 +6,6 @@ export default <IComponentType>{
   text: '时间选择器',
   tagIcon: AlarmClock,
   tag: 'el-timePicker',
+  isShowPointer: false,
   attrs: {},
 };

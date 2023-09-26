@@ -7,5 +7,6 @@ export default <IComponentType>{
   _ID: '',
   tagIcon: EditPen,
   attrs: {},
+  isShowPointer: false,
   defaultValue: 1,
 };

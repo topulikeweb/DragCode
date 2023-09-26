@@ -44,6 +44,10 @@
   .attrsMenus {
     background-color: $containerDarkBackGroundColor;
   }
+
+  .pointerBox:hover {
+    background-color: $pointerDarkBackgroundColor;
+  }
 }
 
 .container {

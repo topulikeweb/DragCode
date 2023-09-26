@@ -1,16 +1,17 @@
 <template>
-  <div>
-    <component :is="item.tag" :class="classes" style="text-align: center" v-if="!item._opt_" v-model="item.defaultValue">
+  <div class="renderComponent">
+    <component :is="item.tag" :class="classes" style="text-align: center" v-if="!item._opt_" v-model="item.defaultValue" @click.stop>
       <div>{{ item.text }}</div>
     </component>
     <!--    复选框-->
-    <component :is="item.tag" :class="classes" style="text-align: center" v-else v-model="item.defaultValue">
+    <component :is="item.tag" :class="classes" style="text-align: center" v-else v-model="item.defaultValue" @click.stop>
       <component
         :is="item._opt_._val_.tag"
         v-for="opt in getStaticData(item)"
         :label="opt.key"
         :value="opt.value"
         :key="opt.key"
+        @click.stop
       ></component>
     </component>
   </div>
@@ -20,8 +21,14 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
+import { elements } from '../../UI';
 
 export default defineComponent({
+  methods: {
+    elements() {
+      return elements;
+    },
+  },
   props: {
     // is: {
     //   type: String as PropType<string>,
@@ -47,26 +54,30 @@ export default defineComponent({
         [`${componentTag}-style`]: componentTag,
       });
     };
-
     onMounted(() => {
       setClasses(props.item.tag);
     });
-
+    /**
+     * 对staticData进行处理
+     * @param item
+     */
     const getStaticData = (item: IComponentType) => {
       // 检查 staticData 是否为空，如果为空则返回默认值
-      if (!item._opt_._val_.staticData || item._opt_._val_.staticData.length === 0) {
-        return [
-          {
-            key: '选项一',
-            value: 1,
-          },
-          {
-            key: '选项二',
-            value: 2,
-          },
-        ];
+      if (item._opt_) {
+        if ((!item._opt_._val_.staticData || item._opt_._val_.staticData) ?? ''.length === 0) {
+          return [
+            {
+              key: '选项一',
+              value: 1,
+            },
+            {
+              key: '选项二',
+              value: 2,
+            },
+          ];
+        }
+        return item._opt_._val_.staticData;
       }
-      return item._opt_._val_.staticData;
     };
     return { classes, getStaticData };
   },

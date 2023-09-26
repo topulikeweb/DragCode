@@ -6,5 +6,6 @@ export default <IComponentType>{
   text: 'switch',
   tagIcon: Open,
   tag: 'el-switch',
+  isShowPointer: false,
   attrs: {},
 };

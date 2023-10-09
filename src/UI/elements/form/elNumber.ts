@@ -9,4 +9,8 @@ export default <IComponentType>{
   attrs: {},
   isShowPointer: false,
   defaultValue: 1,
+
+  style: {
+    size: 'small',
+  },
 };

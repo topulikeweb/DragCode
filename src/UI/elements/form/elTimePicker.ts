@@ -8,4 +8,8 @@ export default <IComponentType>{
   tag: 'el-timePicker',
   isShowPointer: false,
   attrs: {},
+
+  style: {
+    size: 'small',
+  },
 };

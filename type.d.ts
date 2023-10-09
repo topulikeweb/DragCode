@@ -1,5 +1,10 @@
 type ElementType = 'static' | 'dynamic';
 
+export interface elementStyle {
+  size?: string;
+  value?: string | number;
+}
+
 /**
  * 每个组件配置属性的类型
  */
@@ -8,14 +13,23 @@ export interface IComponentType {
   tagIcon?: any;
   tag: string;
   defaultValue?: any;
-  attrs: {};
+  attrs: {
+    [key: string]: any;
+  };
   text: string;
+  label?: string;
+  value?: string | number;
   isShowPointer: boolean;
   _opt_?: {
     label: string;
     _val_: {
       type: string;
+      change?: () => any;
       tag: string;
+      keyValue: {
+        key: string;
+        value: string | number;
+      };
       staticData?: { key: any; value: any }[];
       dynamicData?: {
         url: string;

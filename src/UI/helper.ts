@@ -5,11 +5,19 @@ import { v4 as uuidv4 } from 'uuid';
  * @param title
  * @param options
  */
-export const helper_Radio = function (title: string, options: Array<Record<string, string>>) {
+export const helper_Radio = function (label: string, options: Array<Record<string, string>>) {
+  const _opt_ = {
+    _val_: {
+      tag: 'el-radio-button',
+      staticData: options,
+    },
+  };
   return {
-    tag: 'el-radio-button',
-    title,
-    options,
+    tag: 'el-radio-group',
+    label,
+    // 这个是很重要的数据，每个组件都挂载了，用于menuConf控制画布上组件的属性值
+    el_value: 'small',
+    _opt_,
   };
 };
 /**
@@ -31,10 +39,10 @@ export const helper_getRandomStr = function () {
   return uuidv4().slice(0, 3);
 };
 
-export const helper_opt = function (label: string, tag: string) {
+export const helper_opt = function (label: string, tag: string, option?: Array<any>) {
   return {
     label,
-    _val_: optValue(tag),
+    _val_: optValue(tag, option),
     input_type: 'input_opt',
   };
 };
@@ -42,11 +50,11 @@ export const helper_opt = function (label: string, tag: string) {
  * checkbox的默认配置
  * @param tag
  */
-const optValue = function (tag: string) {
+const optValue = function (tag: string, option?: Array<any>) {
   return {
     type: 'static',
     tag: tag,
-    staticData: [
+    staticData: option ?? [
       {
         key: '选项一',
         value: 1,
@@ -62,5 +70,17 @@ const optValue = function (tag: string) {
       keyName: 'keyName',
       valueName: 'valueName',
     },
+  };
+};
+
+/**
+ * 对switch组件的配置
+ */
+
+export const helper_input_boolean = function (label: string, value: any) {
+  return {
+    tag: 'el-switch',
+    value,
+    label,
   };
 };

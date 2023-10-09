@@ -8,4 +8,7 @@ export default <IComponentType>{
   tag: 'el-divider',
   isShowPointer: false,
   attrs: {},
+  style: {
+    size: 'small',
+  },
 };

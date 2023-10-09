@@ -1,0 +1,12 @@
+@import "../../styles/variables";
+
+.el-space-style {
+  border: 1px $borderColor dotted;
+  width: 97%;
+  font-size: 14px;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

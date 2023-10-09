@@ -1,24 +1,30 @@
 <template>
   <div class="renderComponent">
-    <component :is="item.tag" :class="classes" style="text-align: center" v-if="!item._opt_" v-model="item.defaultValue" @click.stop>
-      <div>{{ item.text }}</div>
-    </component>
+    <div v-if="!item._opt_">
+      <div class="keyName">{{ item.label ?? '' }}</div>
+      <component :is="item.tag" :class="classes" style="text-align: center" @click.stop :size="validate.size">
+        <div>{{ item.text }}</div>
+      </component>
+    </div>
     <!--    复选框-->
-    <component :is="item.tag" :class="classes" style="text-align: center" v-else v-model="item.defaultValue" @click.stop>
-      <component
-        :is="item._opt_._val_.tag"
-        v-for="opt in getStaticData(item)"
-        :label="opt.key"
-        :value="opt.value"
-        :key="opt.key"
-        @click.stop
-      ></component>
-    </component>
+    <!--渲染画布上的复杂组件-->
+    <div v-else>
+      <component :is="item.tag" :class="classes" style="text-align: center" @click.stop :size="validate.size">
+        <component
+          :is="item._opt_._val_.tag"
+          v-for="opt in getStaticData(item)"
+          :label="opt.key"
+          :value="opt.value"
+          :key="opt.key"
+          @click.stop
+        ></component>
+      </component>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
 import { elements } from '../../UI';
@@ -64,7 +70,7 @@ export default defineComponent({
     const getStaticData = (item: IComponentType) => {
       // 检查 staticData 是否为空，如果为空则返回默认值
       if (item._opt_) {
-        if ((!item._opt_._val_.staticData || item._opt_._val_.staticData) ?? ''.length === 0) {
+        if (!item._opt_._val_.staticData) {
           return [
             {
               key: '选项一',
@@ -75,11 +81,19 @@ export default defineComponent({
               value: 2,
             },
           ];
+        } else {
+          return item._opt_._val_.staticData;
         }
-        return item._opt_._val_.staticData;
       }
     };
-    return { classes, getStaticData };
+    /**
+     * 得到组件的size，value等值
+     */
+    const validate = computed(() => {
+      const size = props.item.attrs?.size?.el_value ?? 'small';
+      return { size };
+    });
+    return { classes, getStaticData, validate };
   },
 });
 </script>

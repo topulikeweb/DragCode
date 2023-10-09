@@ -11,4 +11,8 @@ export default <IComponentType>{
   isShowPointer: false,
   _opt_: helper_opt('select选择框', 'el-option'),
   attrs: {},
+
+  style: {
+    size: 'small',
+  },
 };

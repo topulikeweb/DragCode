@@ -11,4 +11,7 @@ export default <IComponentType>{
   isShowPointer: false,
   _opt_: helper_opt('选项框', 'el-checkbox-button'),
   attrs: {},
+  style: {
+    size: 'small',
+  },
 };

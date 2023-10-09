@@ -2,16 +2,10 @@
   <div class="container">
     <div class="topContainer">
       <Toolbar />
-      <el-switch
-        @change="handleToggleDark"
-        v-model="theme"
-        active-text="light"
-        inactive-text="dark"
-      ></el-switch>
+      <el-switch @change="handleToggleDark" v-model="theme" active-text="light" inactive-text="dark"></el-switch>
     </div>
     <SideMenu />
     <DrawerPage />
-    <AttrsMenus />
   </div>
 </template>
 

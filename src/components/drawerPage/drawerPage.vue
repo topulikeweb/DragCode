@@ -4,13 +4,16 @@
       <draggable v-model="lists" @change="onDragEnd" class="drawing-board">
         <transition-group>
           <div v-for="(item, index) in lists" class="elementComponent" @click="showPointer(item), getMenuConf(index)" :key="index">
-            <div class="pointerBox" @click.stop="moveUp(item)" :key="index">
+            <div class="pointerBox" @click.stop="moveUp(item, index)" :key="index">
               <div class="text" v-if="item.isShowPointer">move up</div>
               <el-icon v-if="item.isShowPointer" size="large" class="pointer">
                 <Top />
               </el-icon>
             </div>
-            <render-element :item="item"></render-element>
+            <div class="elementItem">
+              <render-element :item="item" style="width: 95%" :list="lists" :key="item._ID"></render-element>
+              <div class="infoBox"></div>
+            </div>
             <div class="pointerBox" @click.stop="moveDown(item)">
               <div class="text" v-if="item.isShowPointer">move down</div>
               <el-icon v-if="item.isShowPointer" size="large" class="pointer">
@@ -29,7 +32,7 @@
         <RenderElement :item="menuConf"></RenderElement>
         <!--        删除操作-->
         <el-button type="danger" size="small" style="margin-top: 20px" @click="deleteElement">删除 </el-button>
-        <el-button type="info" size="small" style="margin-top: 20px; margin-left: 10px"> 复制 </el-button>
+        <el-button type="info" size="small" style="margin-top: 20px; margin-left: 10px" @click="copyElement"> 复制 </el-button>
         <el-divider>属性面板</el-divider>
         <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs ?? {}" :item="item" :key="index" class="renderElement" />
         <div style="width: 100%; height: 10vh"></div>
@@ -47,7 +50,7 @@ import { Bottom, Top } from '@element-plus/icons-vue';
 import { IComponentType } from '../../../type';
 import { ElMessage } from 'element-plus';
 import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
-
+import { helper_getRandomStr } from '../../UI/helper.ts';
 // 创建一个新的elementList防止出现Typescript判别类型错误的问题
 let newElementList = ref(Store().elementList);
 const formData = reactive({});
@@ -71,7 +74,7 @@ const moveUp = (item: IComponentType) => {
   });
   if (index !== 0) {
     const elementData = lists.value[index];
-    lists.value[index] = lists.value[index - 1];
+    lists.value[index] = JSON.parse(JSON.stringify(lists.value[index - 1]));
     lists.value[index - 1] = elementData;
     Store().updateElementList(lists.value);
     ElMessage({
@@ -95,7 +98,7 @@ const moveDown = (item: IComponentType) => {
   });
   if (index !== lists.value.length - 1) {
     const elementData = lists.value[index + 1];
-    lists.value[index + 1] = lists.value[index];
+    lists.value[index + 1] = JSON.parse(JSON.stringify(lists.value[index]));
     lists.value[index] = elementData;
     Store().updateElementList(lists.value);
     ElMessage({
@@ -111,7 +114,6 @@ const moveDown = (item: IComponentType) => {
 };
 const getMenuConf = (index: number) => {
   menuConf.value = lists.value[index];
-  console.log(lists.value[index]);
 };
 const onDragEnd = () => {
   ElMessage({
@@ -136,6 +138,22 @@ const deleteElement = () => {
     return item._ID === menuConf.value._ID;
   });
   lists.value.splice(index, 1);
+  Store().updateElementList(lists.value);
+};
+/**
+ * 复制当前组件
+ */
+const copyElement = () => {
+  let copyElementItem;
+  const index = lists.value.findIndex((item) => {
+    return item._ID === menuConf.value._ID;
+  });
+  for (let i = 0; i < lists.value.length; i++) {
+    copyElementItem = JSON.parse(JSON.stringify(lists.value[index]));
+    // 重新分配_ID
+    copyElementItem._ID = helper_getRandomStr();
+  }
+  lists.value.push(copyElementItem);
   Store().updateElementList(lists.value);
 };
 </script>

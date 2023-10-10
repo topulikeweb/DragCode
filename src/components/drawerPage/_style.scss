@@ -115,3 +115,17 @@
 .renderElement {
   margin-top: 25px;
 }
+
+.elementItem {
+  display: flex;
+  flex-direction: row;
+
+  .infoBox {
+    background-color: $infoBox;
+    width: 0.5%;
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+}

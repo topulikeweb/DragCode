@@ -13,11 +13,12 @@
         <component
           :is="item._opt_._val_.tag"
           v-for="opt in item._opt_?._val_.staticData"
-          :label="opt.key"
+          :label="opt.value"
           :value="opt.value"
-          :key="opt.key"
+          :key="opt.index"
           @click.stop
-        ></component>
+          >{{ opt.key }}
+        </component>
       </component>
     </div>
   </div>

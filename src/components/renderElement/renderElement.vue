@@ -2,8 +2,11 @@
   <div class="renderComponent">
     <div v-if="!item._opt_">
       <div class="keyName">{{ item.label ?? '' }}</div>
-      <component :is="item.tag" :class="classes" style="text-align: center" @click.stop :size="validate.size">
-        <div>{{ item.text }}</div>
+      <component :is="item.tag" :class="classes" style="text-align: center" @click.stop v-bind="{ ...validate }">
+        <el-icon class="el-icon--right" v-if="validate.e_icon">
+          <component :is="validate.e_icon" />
+        </el-icon>
+        <div>{{ validate.textValue }}</div>
       </component>
     </div>
     <!--    复选框-->
@@ -24,12 +27,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
 import { elements } from '../../UI';
+import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
 
 export default defineComponent({
+  components: { Star, Check, Message, Delete, Edit },
   methods: {
     elements() {
       return elements;
@@ -50,8 +55,9 @@ export default defineComponent({
     },
   },
   setup(props: IRenderElement) {
+    console.log('render Component');
     const classes = ref('');
-
+    const lists = ref(localStorage.getItem('elementList') || '');
     /**
      * 根据组件类型 设置样式
      */
@@ -60,9 +66,8 @@ export default defineComponent({
         [`${componentTag}-style`]: componentTag,
       });
     };
-    onMounted(() => {
-      setClasses(props.item.tag);
-    });
+    setClasses(props.item.tag);
+
     /**
      * 对staticData进行处理
      * @param item
@@ -90,10 +95,14 @@ export default defineComponent({
      * 得到组件的size，value等值
      */
     const validate = computed(() => {
-      const size = props.item.attrs?.size?.el_value ?? 'small';
-      return { size };
+      const size = props.item.attrs?.size?.el_value;
+      const textValue = props.item.attrs?.text?.el_value;
+      const type = props.item.attrs?.type?.el_value;
+      const e_icon = props.item.attrs?.icon?.el_value.name;
+      const circle = props.item.attrs?.switch?.el_value;
+      return { size, textValue, type, e_icon, circle };
     });
-    return { classes, getStaticData, validate };
+    return { classes, getStaticData, validate, lists };
   },
 });
 </script>

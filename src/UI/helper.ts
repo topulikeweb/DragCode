@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @param title
  * @param options
  */
-export const helper_Radio = function (label: string, options: Array<Record<string, string>>) {
+export const helper_Radio = function (label: string, options: Array<Record<string, any>>) {
   const _opt_ = {
     _val_: {
       tag: 'el-radio-button',
@@ -15,8 +15,8 @@ export const helper_Radio = function (label: string, options: Array<Record<strin
   return {
     tag: 'el-radio-group',
     label,
-    // 这个是很重要的数据，每个组件都挂载了，用于menuConf控制画布上组件的属性值
-    el_value: 'small',
+    // 这个是很重要的数据，每个组件都必须挂载，用于menuConf控制画布上组件的属性值
+    el_value: '',
     _opt_,
   };
 };
@@ -25,18 +25,18 @@ export const helper_Radio = function (label: string, options: Array<Record<strin
  * @param label
  * @param value
  */
-export const helper_Input = function (label: string, value: string) {
+export const helper_Input = function (label: string, el_value: string) {
   return {
     tag: 'el-input',
     label,
-    value,
+    el_value,
   };
 };
 /**
  * 获取随机字符串-工具函数
  */
 export const helper_getRandomStr = function () {
-  return uuidv4().slice(0, 3);
+  return uuidv4().slice(0, 6);
 };
 
 export const helper_opt = function (label: string, tag: string, option?: Array<any>) {
@@ -77,10 +77,10 @@ const optValue = function (tag: string, option?: Array<any>) {
  * 对switch组件的配置
  */
 
-export const helper_input_boolean = function (label: string, value: any) {
+export const helper_input_boolean = function (label: string, el_value: any) {
   return {
     tag: 'el-switch',
-    value,
+    el_value,
     label,
   };
 };

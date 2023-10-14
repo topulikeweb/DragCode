@@ -2,12 +2,27 @@
   <div class="renderComponent">
     <div v-if="!item._opt_">
       <div class="keyName">{{ item.label ?? '' }}</div>
-      <component :is="item.tag" :class="classes" style="text-align: center" @click.stop v-bind="{ ...validate }">
-        <el-icon class="el-icon--right" v-if="validate.e_icon">
-          <component :is="validate.e_icon" />
-        </el-icon>
-        <div>{{ validate.textValue }}</div>
-      </component>
+      <el-form>
+        <el-form-item :label="validate.formName">
+          <el-col :span="Math.floor(validate.sliderSize / 4.5)">
+            <component
+              :is="item.tag"
+              :class="classes"
+              style="text-align: center"
+              @click.stop
+              v-bind="{ ...validate }"
+              :content-position="validate.content_position"
+            >
+              <!--        分割线的文本-->
+              <div>{{ validate.divider_Value }}</div>
+              <el-icon class="el-icon--right" v-if="validate.e_icon">
+                <component :is="validate.e_icon" />
+              </el-icon>
+              <div>{{ validate.textValue }}</div>
+            </component>
+          </el-col>
+        </el-form-item>
+      </el-form>
     </div>
     <!--    复选框-->
     <!--渲染画布上的复杂组件-->
@@ -15,7 +30,7 @@
       <component :is="item.tag" :class="classes" style="text-align: center" @click.stop :size="validate.size">
         <component
           :is="item._opt_._val_.tag"
-          v-for="opt in getStaticData(item)"
+          v-for="opt in validate.option"
           :label="opt.key"
           :value="opt.value"
           :key="opt.key"
@@ -27,15 +42,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
 import { elements } from '../../UI';
 import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
+import { formatDate } from '@vueuse/core';
 
 export default defineComponent({
   components: { Star, Check, Message, Delete, Edit },
   methods: {
+    formatDate,
     elements() {
       return elements;
     },
@@ -69,40 +86,39 @@ export default defineComponent({
     setClasses(props.item.tag);
 
     /**
-     * 对staticData进行处理
-     * @param item
-     */
-    const getStaticData = (item: IComponentType) => {
-      // 检查 staticData 是否为空，如果为空则返回默认值
-      if (item._opt_) {
-        if (!item._opt_._val_.staticData) {
-          return [
-            {
-              key: '选项一',
-              value: 1,
-            },
-            {
-              key: '选项二',
-              value: 2,
-            },
-          ];
-        } else {
-          return item._opt_._val_.staticData;
-        }
-      }
-    };
-    /**
      * 得到组件的size，value等值
      */
     const validate = computed(() => {
       const size = props.item.attrs?.size?.el_value;
+      let sliderSize = props.item.attrs?.sliderSize?.el_value;
+      // 限制sliderSize大小
+      if (sliderSize < 11) {
+        sliderSize = 11;
+      }
       const textValue = props.item.attrs?.text?.el_value;
       const type = props.item.attrs?.type?.el_value;
       const e_icon = props.item.attrs?.icon?.el_value.name;
       const circle = props.item.attrs?.switch?.el_value;
-      return { size, textValue, type, e_icon, circle };
+      let content_position = props.item.attrs?.position?.el_value === '' ? 'center' : props.item.attrs?.position?.el_value;
+      let divider_Value = props.item.attrs?.divider_Value?.el_value;
+      const formName = props.item.attrs?.formName?.el_value;
+      const placeholder = props.item.attrs?.placeholder?.el_value;
+      const option = props.item.attrs?.option?._opt_?._val_.option;
+      return {
+        size,
+        textValue,
+        type,
+        e_icon,
+        circle,
+        content_position,
+        divider_Value,
+        formName,
+        sliderSize,
+        placeholder,
+        option,
+      };
     });
-    return { classes, getStaticData, validate, lists };
+    return { classes, validate, lists };
   },
 });
 </script>

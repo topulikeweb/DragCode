@@ -24,9 +24,8 @@ export interface IComponentType {
     label: string;
     _val_: {
       type: string;
-      change?: () => any;
       tag: string;
-      keyValue: {
+      keyValue?: {
         key: string;
         value: string | number;
       };

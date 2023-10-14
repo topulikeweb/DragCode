@@ -84,3 +84,42 @@ export const helper_input_boolean = function (label: string, el_value: any) {
     label,
   };
 };
+/**
+ * slider的配置
+ * @param label
+ * @param el_value
+ */
+export const helper_slider = function (label: string, el_value: any) {
+  return {
+    tag: 'el-slider',
+    el_value,
+    label,
+  };
+};
+const tag_children = function (tag: string) {
+  return {
+    _val_: {
+      tag,
+      label: ['静态配置', '动态配置'],
+      option: [
+        {
+          key: '选项一',
+          value: 1,
+        },
+        {
+          key: '选项二',
+          value: 2,
+        },
+      ],
+    },
+  };
+};
+export const helper_tab = function (label: string, el_value: any, type: string) {
+  return {
+    tag: 'el-tabs',
+    label,
+    el_value,
+    type,
+    _opt_: tag_children('el-tab-pane'),
+  };
+};

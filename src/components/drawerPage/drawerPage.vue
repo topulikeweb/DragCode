@@ -4,7 +4,7 @@
       <draggable v-model="lists" @change="onDragEnd" class="drawing-board">
         <transition-group>
           <div v-for="(item, index) in lists" class="elementComponent" @click="showPointer(item), getMenuConf(index)" :key="index">
-            <div class="pointerBox" @click.stop="moveUp(item, index)" :key="index">
+            <div class="pointerBox" @click.stop="moveUp(item)" :key="index">
               <div class="text" v-if="item.isShowPointer">move up</div>
               <el-icon v-if="item.isShowPointer" size="large" class="pointer">
                 <Top />
@@ -28,10 +28,19 @@
 
   <el-tabs type="border-card" class="demo-tabs">
     <el-tab-pane label="组件属性">
-      <el-scrollbar height="90vh">
+      <el-scrollbar height="80vh">
         <RenderElement :item="menuConf"></RenderElement>
         <!--        删除操作-->
-        <el-button type="danger" size="small" style="margin-top: 20px" @click="deleteElement">删除 </el-button>
+        <el-popover :visible="visible" placement="top" :width="160">
+          <p>确认删除吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="small" text @click="visible = false">取消 </el-button>
+            <el-button size="small" type="primary" @click="deleteElement"> 确认 </el-button>
+          </div>
+          <template #reference>
+            <el-button type="danger" size="small" style="margin-top: 20px" @click="visible = true">删除 </el-button>
+          </template>
+        </el-popover>
         <el-button type="info" size="small" style="margin-top: 20px; margin-left: 10px" @click="copyElement"> 复制 </el-button>
         <el-divider>属性面板</el-divider>
         <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs ?? {}" :item="item" :key="index" class="renderElement" />
@@ -56,6 +65,8 @@ let newElementList = ref(Store().elementList);
 const formData = reactive({});
 // 当前选中组件的属性详情
 let menuConf = ref<IComponentType>({} as IComponentType);
+// 对话框的boolean值
+const visible = ref(false);
 /**
  * 是否展示指示箭头
  * @param e
@@ -63,6 +74,7 @@ let menuConf = ref<IComponentType>({} as IComponentType);
  */
 const showPointer = (item: IComponentType) => {
   item.isShowPointer = !item.isShowPointer;
+  console.log(item);
 };
 
 /**
@@ -139,6 +151,7 @@ const deleteElement = () => {
   });
   lists.value.splice(index, 1);
   Store().updateElementList(lists.value);
+  visible.value = true;
 };
 /**
  * 复制当前组件

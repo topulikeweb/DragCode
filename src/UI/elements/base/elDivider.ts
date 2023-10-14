@@ -1,5 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Minus } from '@element-plus/icons-vue';
+import { helper_Input, helper_Radio } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -7,8 +8,21 @@ export default <IComponentType>{
   tagIcon: Minus,
   tag: 'el-divider',
   isShowPointer: false,
-  attrs: {},
-  style: {
-    size: 'small',
+  attrs: {
+    divider_Value: helper_Input('文本', '分割线'),
+    position: helper_Radio('位置', [
+      {
+        key: 'left',
+        value: 'left',
+      },
+      {
+        key: 'center',
+        value: 'center',
+      },
+      {
+        key: 'right',
+        value: 'right',
+      },
+    ]),
   },
 };

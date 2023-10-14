@@ -1,5 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Grid } from '@element-plus/icons-vue';
+import { helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -7,9 +8,7 @@ export default <IComponentType>{
   tagIcon: Grid,
   tag: 'el-space',
   isShowPointer: false,
-  attrs: {},
-
-  style: {
-    size: 'small',
+  attrs: {
+    sliderSize: helper_slider('尺寸', 30),
   },
 };

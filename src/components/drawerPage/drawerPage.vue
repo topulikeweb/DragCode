@@ -74,7 +74,8 @@ const visible = ref(false);
  */
 const showPointer = (item: IComponentType) => {
   item.isShowPointer = !item.isShowPointer;
-  console.log(item);
+  Store().findIndexElementItem(item);
+  // console.log(item);
 };
 
 /**

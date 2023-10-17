@@ -31,13 +31,19 @@
                 <el-input v-model="item_child.value"></el-input>
               </el-form-item>
             </div>
-            <div v-for="(item_child, index) in item._opt_._val_.option" style="font-size: 11px" v-else>
-              <el-form-item :label="`label${index + 33}`">
-                <el-input v-model="item_child.key"></el-input>
+            <div style="font-size: 11px" v-else>
+              <el-form-item :label="`接口地址`">
+                <el-input placeholder="后端接口地址" v-model="url">
+                  <template #prepend>Http://</template>
+                </el-input>
               </el-form-item>
-              <el-form-item :label="`value${index + 1}`">
-                <el-input v-model="item_child.value"></el-input>
-              </el-form-item>
+              <!--              <el-form-item :label="`label的键值`">-->
+              <!--                <el-input></el-input>-->
+              <!--              </el-form-item>-->
+              <!--              <el-form-item :label="`value的键值`">-->
+              <!--                <el-input></el-input>-->
+              <!--              </el-form-item>-->
+              <el-button size="small" @click="getOption">确认</el-button>
             </div>
 
             <!--            <div style="font-size: 11px" v-for="(item_child, index) in item._opt?._val_.option">-->
@@ -57,6 +63,10 @@
 
 <script lang="ts" setup>
 import { IComponentType } from '../../../type';
+import axios from 'axios';
+import { Store } from '../../pinia';
+import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
 
 defineProps({
   item: {
@@ -65,6 +75,40 @@ defineProps({
     el_value: { type: String },
   },
 });
+let lists = ref(Store().elementList);
+
+const url = ref('');
+/**
+ * 请求过来的格式应该是[{
+ *  value:1
+ *  key:'1'
+ * }，{
+ *  value:2
+ *  key:'2'
+ * }]
+ */
+const getOption = () => {
+  // let index = lists.value.findIndex((item) => {
+  //   return item._ID === props.item._ID;
+  // });
+  axios({
+    method: 'GET',
+    url: url.value,
+  })
+    .then((res) => {
+      // 将请求过来的值更新，并将更新数据存入本地
+      lists.value[JSON.parse(localStorage.getItem('index') ?? '0')].attrs.option._opt_._val_.option = res;
+      Store().updateElementList(lists.value);
+      ElMessage({
+        message: '动态option配置成功',
+      });
+    })
+    .catch((error) => {
+      ElMessage({
+        message: error.message + '动态option配置失败',
+      });
+    });
+};
 </script>
 <style>
 @import './_style.scss';

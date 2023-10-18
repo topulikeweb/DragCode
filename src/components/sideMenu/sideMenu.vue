@@ -20,8 +20,9 @@ import { elements } from '../../UI';
 import { Store } from '../../pinia';
 import { IComponentType } from '../../../type';
 import { helper_getRandomStr } from '../../UI/helper.ts';
+import { ref } from 'vue';
 
-const elementList = Store().elementList;
+const elementList = ref(Store().elementList);
 
 /**
  * 创建组件到数组
@@ -30,8 +31,8 @@ const createElement = (item: IComponentType) => {
   // 进行深拷贝，以免组件之间数据互相影响
   const newItem = JSON.parse(JSON.stringify(item));
   newItem._ID = helper_getRandomStr();
-  elementList.push(newItem);
-  Store().updateElementList(elementList);
+  elementList.value.push(newItem);
+  Store().updateElementList(elementList.value);
 };
 </script>
 

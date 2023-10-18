@@ -8,8 +8,5 @@ export default <IComponentType>{
   tagIcon: DCaret,
   isShowPointer: false,
   attrs: {},
-
-  style: {
-    size: 'small',
-  },
+  value: '',
 };

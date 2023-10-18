@@ -8,6 +8,7 @@ export default <IComponentType>{
   tagIcon: Grid,
   tag: 'el-space',
   isShowPointer: false,
+  value: '',
   attrs: {
     sliderSize: helper_slider('尺寸', 30),
   },

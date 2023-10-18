@@ -8,6 +8,7 @@ export default <IComponentType>{
   tagIcon: Minus,
   tag: 'el-divider',
   isShowPointer: false,
+  value: '',
   attrs: {
     divider_Value: helper_Input('文本', '分割线'),
     position: helper_Radio('位置', [

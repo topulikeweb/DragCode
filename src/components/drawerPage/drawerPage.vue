@@ -1,7 +1,17 @@
 <template>
   <div class="drawerPage">
     <el-form :model="formData">
-      <draggable v-model="lists" @change="onDragEnd" class="drawing-board">
+      <draggable
+        :list="lists"
+        @end="onDragEnd"
+        class="drawing-board"
+        ghost-class="ghost"
+        itemKey="id"
+        :force-fallback="true"
+        group="list"
+        :fallback-class="true"
+        :fallback-on-body="true"
+      >
         <transition-group>
           <div v-for="(item, index) in lists" class="elementComponent" @click="showPointer(item), getMenuConf(index)" :key="index">
             <div class="pointerBox" @click.stop="moveUp(item)" :key="index">
@@ -47,7 +57,9 @@
         <div style="width: 100%; height: 10vh"></div>
       </el-scrollbar>
     </el-tab-pane>
-    <el-tab-pane label="表单属性">Config</el-tab-pane>
+    <el-tab-pane label="表单属性">
+      <RenderMenuConfComponent :item="formConf.attrs"></RenderMenuConfComponent>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
@@ -60,6 +72,7 @@ import { IComponentType } from '../../../type';
 import { ElMessage } from 'element-plus';
 import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
 import { helper_getRandomStr } from '../../UI/helper.ts';
+import { formConf } from '../../UI/elements/form.ts';
 // 创建一个新的elementList防止出现Typescript判别类型错误的问题
 let newElementList = ref(Store().elementList);
 const formData = reactive({});
@@ -67,6 +80,7 @@ const formData = reactive({});
 let menuConf = ref<IComponentType>({} as IComponentType);
 // 对话框的boolean值
 const visible = ref(false);
+
 /**
  * 是否展示指示箭头
  * @param e
@@ -75,7 +89,7 @@ const visible = ref(false);
 const showPointer = (item: IComponentType) => {
   item.isShowPointer = !item.isShowPointer;
   Store().findIndexElementItem(item);
-  // console.log(item);
+  console.log(item);
 };
 
 /**
@@ -128,7 +142,11 @@ const moveDown = (item: IComponentType) => {
 const getMenuConf = (index: number) => {
   menuConf.value = lists.value[index];
 };
+/**
+ * 拖动组件，改变次序
+ */
 const onDragEnd = () => {
+  console.log(lists.value);
   ElMessage({
     message: '操作成功',
     type: 'success',
@@ -139,8 +157,9 @@ let lists = computed({
     return newElementList.value;
   },
   set(newVal: any[]) {
+    console.log(newVal);
     newElementList.value = newVal;
-    Store().updateElementList(newVal);
+    Store().updateElementList(newElementList.value);
   },
 });
 /**

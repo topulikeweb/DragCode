@@ -25,7 +25,7 @@ export const helper_Radio = function (label: string, options: Array<Record<strin
  * @param label
  * @param value
  */
-export const helper_Input = function (label: string, el_value: string) {
+export const helper_Input = function (label: string, el_value: string | number) {
   return {
     tag: 'el-input',
     label,
@@ -100,7 +100,16 @@ const tag_children = function (tag: string) {
   return {
     _val_: {
       tag,
-      label: ['静态配置', '动态配置'],
+      label: [
+        {
+          label: '静态配置',
+          name: 'first',
+        },
+        {
+          label: '动态配置',
+          name: 'second',
+        },
+      ],
       option: [
         {
           key: '选项一',

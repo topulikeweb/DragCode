@@ -22,8 +22,15 @@
         </component>
         <!--        option card组件-->
         <div v-for="(el, index) in item._opt_?._val_.label" v-if="item._opt_?._val_.label">
-          <component :is="item._opt_?._val_.tag" :label="el" :value="item._opt_?._val_.value" :key="index" @click.stop>
-            <div v-for="(item_child, index) in item._opt_._val_.option" style="font-size: 11px" v-if="el === '静态配置'">
+          <component
+            :is="item._opt_?._val_.tag"
+            :label="el.label"
+            :name="el.name"
+            :value="item._opt_?._val_.value"
+            :key="index"
+            @click.stop
+          >
+            <div v-for="(item_child, index) in item._opt_._val_.option" style="font-size: 11px" v-if="el.label === '静态配置'">
               <el-form-item :label="`label${index + 1}`">
                 <el-input v-model="item_child.key"></el-input>
               </el-form-item>
@@ -37,23 +44,8 @@
                   <template #prepend>Http://</template>
                 </el-input>
               </el-form-item>
-              <!--              <el-form-item :label="`label的键值`">-->
-              <!--                <el-input></el-input>-->
-              <!--              </el-form-item>-->
-              <!--              <el-form-item :label="`value的键值`">-->
-              <!--                <el-input></el-input>-->
-              <!--              </el-form-item>-->
               <el-button size="small" @click="getOption">确认</el-button>
             </div>
-
-            <!--            <div style="font-size: 11px" v-for="(item_child, index) in item._opt?._val_.option">-->
-            <!--              <el-form-item :label="`label${index}`">-->
-            <!--                <el-input v-model="item_child.key"></el-input>-->
-            <!--              </el-form-item>-->
-            <!--              <el-form-item :label="`value${index}`">-->
-            <!--                <el-input v-model="item_child.value"></el-input>-->
-            <!--              </el-form-item>-->
-            <!--            </div>-->
           </component>
         </div>
       </component>

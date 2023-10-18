@@ -1,11 +1,30 @@
 import { IComponentType } from '../../../../type';
 import { Pointer } from '@element-plus/icons-vue';
+import { helper_opt, helper_Radio, helper_tab } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
   text: '单选框',
   tagIcon: Pointer,
-  tag: 'el-radio',
+  tag: 'el-radio-group',
   isShowPointer: false,
-  attrs: {},
+  _opt_: helper_opt('单选框', 'el-radio'),
+  value: '',
+  attrs: {
+    size: helper_Radio('尺寸', [
+      {
+        key: 'small',
+        value: 'small',
+      },
+      {
+        key: 'medium',
+        value: 'medium',
+      },
+      {
+        key: 'large',
+        value: 'large',
+      },
+    ]),
+    option: helper_tab('option配置', 'first', 'card'),
+  },
 };

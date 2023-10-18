@@ -10,6 +10,7 @@ export default <IComponentType>{
   tagIcon: Files,
   // input_text: helper_Input('按钮文本', '点击'),
   // input_key: helper_Input('属性名', `button`),
+  value: '',
   isShowPointer: false,
   attrs: {
     size: helper_Radio('尺寸', [

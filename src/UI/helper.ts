@@ -132,3 +132,14 @@ export const helper_tab = function (label: string, el_value: any, type: string) 
     _opt_: tag_children('el-tab-pane'),
   };
 };
+
+export const helper_button = function (label: string) {
+  return {
+    label,
+    _val_: {
+      type: '',
+      tag: 'el-button',
+    },
+    input_type: '',
+  };
+};

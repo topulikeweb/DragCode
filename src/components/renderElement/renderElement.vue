@@ -1,20 +1,20 @@
 <template>
   <div class="renderComponent">
-    <div v-if="!item._opt_">
+    <div v-if="item._opt_ === undefined">
       <!--      专门用于渲染分割线-->
       <component v-if="item.tag === 'el-divider'" :is="item.tag" :content-position="validate.content_position">
         <!--        分割线的文本-->
         {{ validate.divider_Value }}
       </component>
       <div class="keyName">{{ item.label ?? '' }}</div>
-      <el-form v-if="item.tag !== 'el-divider'">
+      <el-form v-if="item.tag !== 'el-divider'" :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
         <el-form-item :label="validate.formName">
           <el-col :span="Math.floor(validate.sliderSize / 4.5)">
             <component
               v-model="validate.defaultValue"
               :is="item.tag"
               :class="classes"
-              style="text-align: center"
+              :style="validate.style"
               @click.stop
               v-bind="{ ...validate }"
               :content-position="validate.content_position"
@@ -33,7 +33,7 @@
     <!--    复选框-->
     <!--渲染画布上的复杂组件-->
     <div v-else>
-      <el-form>
+      <el-form :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
         <el-form-item :label="validate.formName">
           <component
             :is="item.tag"
@@ -44,13 +44,18 @@
             v-model="validate.defaultValue"
           >
             <component
+              v-if="item._opt_._val_?.staticData !== undefined"
               :is="item._opt_._val_.tag"
               v-for="opt in validate.option"
               :label="opt.key"
               :value="opt.value"
               :key="opt.key"
               @click.stop
-            ></component>
+            >
+            </component>
+            <component v-else :is="item._opt_._val_?.tag">
+              {{ validate.textValue }}
+            </component>
           </component>
         </el-form-item>
       </el-form>
@@ -66,6 +71,7 @@ import { elements } from '../../UI';
 import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
 import { formatDate } from '@vueuse/core';
 import { Store } from '../../pinia';
+import { formConf } from '../../UI/elements/form.ts';
 
 export default defineComponent({
   components: { Star, Check, Message, Delete, Edit },
@@ -93,9 +99,11 @@ export default defineComponent({
     console.log('render Component');
     const classes = ref('');
     const lists = ref(JSON.parse(localStorage.getItem('elementList') || '{}'));
+    const formConfig = ref(formConf);
     /**
      * 根据组件类型 设置样式
      */
+
     const setClasses = (componentTag: string) => {
       classes.value = classNames({
         [`${componentTag}-style`]: componentTag,
@@ -109,6 +117,7 @@ export default defineComponent({
     const validate = computed(() => {
       const size = props.item.attrs?.size?.el_value;
       let sliderSize = props.item.attrs?.sliderSize?.el_value;
+      console.log(sliderSize);
       // 限制sliderSize大小
       if (sliderSize < 11) {
         sliderSize = 11;
@@ -125,8 +134,16 @@ export default defineComponent({
       const step = parseInt(props.item.attrs?.step?.el_value);
       const min = parseInt(props.item.attrs?.min?.el_value);
       const max = parseInt(props.item.attrs?.max?.el_value);
-      const defaultValue = parseInt(props.item.attrs?.defaultValue?.el_value);
+      const defaultValue = props.item.attrs?.defaultValue?.el_value;
       // const radioValue = props.item.attrs?.option?.el_value;
+      const src = props.item.attrs?.src?.el_value;
+      const fit = props.item.attrs?.fit?.el_value;
+      const style = {
+        width: props.item.attrs?.width?.el_value + 'px',
+        height: props.item.attrs?.height?.el_value + 'px',
+      };
+      const formSliderSize = formConfig.value.attrs.sliderSize.el_value * 5;
+      const labelPosition = formConfig.value.attrs.labelPosition.el_value;
       /**
        * 将设置的属性存入本地
        */
@@ -156,6 +173,11 @@ export default defineComponent({
         max,
         defaultValue,
         // radioValue,
+        src,
+        style,
+        fit,
+        formSliderSize,
+        labelPosition,
       };
     });
     return { classes, validate, lists };

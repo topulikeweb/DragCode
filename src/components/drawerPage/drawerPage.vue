@@ -58,7 +58,12 @@
       </el-scrollbar>
     </el-tab-pane>
     <el-tab-pane label="表单属性">
-      <RenderMenuConfComponent :item="formConf.attrs"></RenderMenuConfComponent>
+      <RenderMenuConfComponent
+        v-for="(item, index) in formConfig.attrs ?? {}"
+        :item="item"
+        :key="index"
+        class="renderElement"
+      ></RenderMenuConfComponent>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -68,7 +73,7 @@ import { Store } from '../../pinia';
 import RenderElement from '../renderElement/renderElement.vue';
 import { computed, reactive, ref } from 'vue';
 import { Bottom, Top } from '@element-plus/icons-vue';
-import { IComponentType } from '../../../type';
+import { IComponentType, IFormConfig } from '../../../type';
 import { ElMessage } from 'element-plus';
 import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
 import { helper_getRandomStr } from '../../UI/helper.ts';
@@ -80,7 +85,8 @@ const formData = reactive({});
 let menuConf = ref<IComponentType>({} as IComponentType);
 // 对话框的boolean值
 const visible = ref(false);
-
+let formConfig = ref({} as IFormConfig);
+formConfig.value = formConf;
 /**
  * 是否展示指示箭头
  * @param e
@@ -91,7 +97,6 @@ const showPointer = (item: IComponentType) => {
   Store().findIndexElementItem(item);
   console.log(item);
 };
-
 /**
  * 向上移动
  */

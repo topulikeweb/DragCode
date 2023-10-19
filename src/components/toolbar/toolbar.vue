@@ -1,6 +1,7 @@
 <template>
   <div class="flex">
-    <el-button :icon="DocumentAdd" size="small" class="toolbarBtn">生成 </el-button>
+    <el-button :icon="Opportunity" size="small" class="toolbarBtn" @click="makeCode"> 生成代码 </el-button>
+    <el-button :icon="Opportunity" size="small" class="toolbarBtn" @click="drawPage"> 我要绘制 </el-button>
     <el-button :icon="Failed" size="small" class="toolbarBtn" @click="centerDialogVisible = true"> 清空 </el-button>
     <!--    弹出的警告-->
     <el-dialog v-model="centerDialogVisible" title="Warning" width="30%" align-center>
@@ -23,15 +24,20 @@
     <!--      <el-input type="number" class="inputWith" />-->
     <!--      %-->
     <!--    </div>-->
+    <div></div>
   </div>
 </template>
 <script setup lang="ts">
-import { DocumentAdd, Failed } from '@element-plus/icons-vue';
+import { Failed, Opportunity } from '@element-plus/icons-vue';
 import { Store } from '../../pinia';
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const centerDialogVisible = ref(false);
 const elementList = reactive(Store().elementList);
+const currentComponent = ref('componentA');
+
 /**
  * 清空页面上创建出来的组件
  */
@@ -40,6 +46,16 @@ const cleanAll = () => {
   Store().updateElementList(elementList);
   centerDialogVisible.value = false;
 };
+const drawPage = () => {
+  router.push('/drawPage');
+};
+/**
+ * 生成代码
+ */
+const makeCode = () => {
+  router.push('/codePage');
+};
+console.log(makeCode());
 </script>
 
 <style scoped>

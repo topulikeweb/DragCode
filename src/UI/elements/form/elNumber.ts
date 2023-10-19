@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { EditPen } from '@element-plus/icons-vue';
-import { helper_getRandomStr, helper_Input, helper_Radio } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
 
 export default <IComponentType>{
   tag: 'el-input-number',
@@ -29,6 +29,7 @@ export default <IComponentType>{
     defaultValue: helper_Input('默认值（一定要大于设置的最小值）', 1),
     min: helper_Input('最小值', 0),
     max: helper_Input('最大值', 100),
+    require: helper_input_boolean('是否必填', false),
   },
   isShowPointer: false,
 };

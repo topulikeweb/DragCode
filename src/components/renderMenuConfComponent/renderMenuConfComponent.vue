@@ -5,6 +5,7 @@
       <div class="keyName">{{ item.label ?? '' }}</div>
       <component :is="item.tag" style="text-align: center" @click.stop v-model="item.el_value">
         <div>{{ item.text }}</div>
+        <div>{{ item }}</div>
       </component>
     </div>
     <div v-else>
@@ -60,7 +61,7 @@ import { Store } from '../../pinia';
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object as () => IComponentType['attrs'],
     required: true,
@@ -68,8 +69,8 @@ defineProps({
   },
 });
 let lists = ref(Store().elementList);
-
 const url = ref('');
+console.log(props.item.el_value, 111);
 /**
  * 请求过来的格式应该是[{
  *  value:1
@@ -79,6 +80,7 @@ const url = ref('');
  *  key:'2'
  * }]
  */
+
 const getOption = () => {
   // let index = lists.value.findIndex((item) => {
   //   return item._ID === props.item._ID;

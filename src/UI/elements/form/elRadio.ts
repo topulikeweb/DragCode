@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Pointer } from '@element-plus/icons-vue';
-import { helper_opt, helper_Radio, helper_tab } from '../../helper.ts';
+import { helper_input_boolean, helper_opt, helper_Radio, helper_tab } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -26,5 +26,6 @@ export default <IComponentType>{
       },
     ]),
     option: helper_tab('option配置', 'first', 'card'),
+    require: helper_input_boolean('是否必填', false),
   },
 };

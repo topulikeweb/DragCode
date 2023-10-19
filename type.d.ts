@@ -22,7 +22,7 @@ export interface IComponentType {
   isShowPointer: boolean;
   _opt_?: {
     label: string;
-    _val_: {
+    _val_?: {
       type: string;
       tag: string;
       keyValue?: {
@@ -57,4 +57,16 @@ export interface IElements {
  */
 export interface IRenderElement {
   item: IComponentType;
+}
+
+export interface IFormConfig {
+  //   tag:
+  //     props: {},
+  //   __rules: {},
+  //   attrs: {
+  // }
+  tag: string;
+  props: {};
+  __rules: {};
+  attrs: {};
 }

@@ -1,5 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { DCaret } from '@element-plus/icons-vue';
+import { helper_input_boolean } from '../../helper.ts';
 
 export default <IComponentType>{
   tag: 'el-scrollbar',
@@ -7,6 +8,8 @@ export default <IComponentType>{
   _ID: '',
   tagIcon: DCaret,
   isShowPointer: false,
-  attrs: {},
+  attrs: {
+    require: helper_input_boolean('是否必填', false),
+  },
   value: '',
 };

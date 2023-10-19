@@ -5,7 +5,7 @@
       <el-switch @change="handleToggleDark" v-model="theme" active-text="light" inactive-text="dark"></el-switch>
     </div>
     <SideMenu />
-    <DrawerPage />
+    <router-view />
   </div>
 </template>
 
@@ -15,7 +15,6 @@ import { ref } from 'vue';
 import Toolbar from './components/toolbar/toolbar.vue';
 import SideMenu from './components/sideMenu/sideMenu.vue';
 import DrawerPage from './components/drawerPage/drawerPage.vue';
-import AttrsMenus from './components/attrsMenus/attrsMenus.vue';
 
 let theme = ref<boolean>(false);
 const isDark = useDark();

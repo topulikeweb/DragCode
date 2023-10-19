@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Minus } from '@element-plus/icons-vue';
-import { helper_Input, helper_Radio } from '../../helper.ts';
+import { helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -25,5 +25,6 @@ export default <IComponentType>{
         value: 'right',
       },
     ]),
+    require: helper_input_boolean('是否必填', false),
   },
 };

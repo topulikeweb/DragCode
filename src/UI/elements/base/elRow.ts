@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Grid } from '@element-plus/icons-vue';
-import { helper_slider } from '../../helper.ts';
+import { helper_input_boolean, helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -11,5 +11,6 @@ export default <IComponentType>{
   value: '',
   attrs: {
     sliderSize: helper_slider('尺寸', 30),
+    require: helper_input_boolean('是否必填', false),
   },
 };

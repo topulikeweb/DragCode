@@ -36,7 +36,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const centerDialogVisible = ref(false);
 const elementList = reactive(Store().elementList);
-const currentComponent = ref('componentA');
 
 /**
  * 清空页面上创建出来的组件

@@ -70,3 +70,27 @@ export interface IFormConfig {
   __rules: {};
   attrs: {};
 }
+
+export interface IElementName {
+  size: string | undefined;
+  textValue: string;
+  type: string | undefined;
+  e_icon: string | undefined;
+  circle: boolean | undefined;
+  content_position: string;
+  divider_Value: string | undefined;
+  formName: string | undefined;
+  sliderSize: number;
+  placeholder: string | undefined;
+  option: any[] | undefined; // 你可以根据实际情况更具体定义 option 的类型
+  step: number | undefined;
+  min: number | undefined;
+  max: number | undefined;
+  defaultValue: any | undefined; // 你可以根据实际情况更具体定义 defaultValue 的类型
+  src: string | undefined;
+  style: {
+    width: string | undefined;
+    height: string | undefined;
+  };
+  fit: string | undefined;
+}

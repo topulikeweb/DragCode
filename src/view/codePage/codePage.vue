@@ -1,102 +1,130 @@
 <template>
   <div class="drawerPage">
-    <div v-for="(item, index) in renderedHTML">
-      <code :key="index">{{ item }}</code>
+    <div class="hljs-container" codetype="JavaScript" v-code>
+      <el-button style="position: absolute; right: 20px" @click="copyCode"> 复制 </el-button>
+      <highlightjs language="JavaScript" :autodetect="false" :code="code"></highlightjs>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Store } from '../../pinia';
-import { IComponentType, IElementName } from '../../../type';
+import { renderHtml, vCode } from '../../UI/generate.ts';
+import 'vue-highlight-code/dist/style.css';
 
-const lists = ref(Store().elementList);
-const renderedHTML = ref([] as Array<string>);
-const elementName = ref({} as IElementName);
+const renderedHTMLList = ref([] as Array<string>);
+let code = ref('');
 const getItemTag = () => {
-  renderedHTML.value[0] = `<template>`;
-  for (let i = 0; i < lists.value.length; i++) {
-    if (lists.value[i].tag === 'el-button') {
-      console.log(lists.value[i].attrs);
-      validate(lists.value[i]);
-      renderedHTML.value.push(`<${lists.value[i].tag} size="${elementName.value.size}">${lists.value[i].text}</${lists.value[i].tag}>`);
-    } else {
-      renderedHTML.value.push(`<${lists.value[i].tag} size="${lists.value[i].attrs.size.el_value}" ></${lists.value[i].tag}>`);
-      console.log(lists.value[i].attrs.size.el_value, 111);
-    }
-  }
-  renderedHTML.value[renderedHTML.value.length - 1] = `</template>`;
+  renderedHTMLList.value = renderHtml();
+  // 转换为字符串
+  console.log(renderedHTMLList);
+  code.value = formatCode(renderedHTMLList.value);
+  console.log(code.value);
 };
-const validate = (item: IComponentType) => {
-  const size = item.attrs?.size?.el_value;
-  let sliderSize = item.attrs?.sliderSize?.el_value;
-  console.log(sliderSize);
-  // 限制sliderSize大小
-  if (sliderSize < 11) {
-    sliderSize = 11;
-  }
-  const textValue = item.attrs?.text?.el_value ?? '';
-  const type = item.attrs?.type?.el_value;
-  const e_icon = item.attrs?.icon?.el_value.name;
-  const circle = item.attrs?.switch?.el_value;
-  let content_position = item.attrs?.position?.el_value === '' ? 'center' : item.attrs?.position?.el_value;
-  let divider_Value = item.attrs?.divider_Value?.el_value;
-  const formName = item.attrs?.formName?.el_value;
-  const placeholder = item.attrs?.placeholder?.el_value;
-  const option = item.attrs?.option?._opt_?._val_.option;
-  const step = parseInt(item.attrs?.step?.el_value);
-  const min = parseInt(item.attrs?.min?.el_value);
-  const max = parseInt(item.attrs?.max?.el_value);
-  const defaultValue = item.attrs?.defaultValue?.el_value;
-  // const radioValue =  item.attrs?.option?.el_value;
-  const src = item.attrs?.src?.el_value;
-  const fit = item.attrs?.fit?.el_value;
-  const style = {
-    width: item.attrs?.width?.el_value + 'px',
-    height: item.attrs?.height?.el_value + 'px',
-  };
-  // const formSliderSize = formConfig.value.attrs.sliderSize.el_value * 5;
-  // const labelPosition = formConfig.value.attrs.labelPosition.el_value;
-  /**
-   * 将设置的属性存入本地
-   */
-  if (lists.value.length !== 0 && item.attrs) {
-    const index = JSON.parse(localStorage.getItem('index') ?? '0');
-    if (index >= 0 && index < lists.value.length) {
-      lists.value[index].attrs = item.attrs;
-      Store().updateElementList(lists.value);
-    }
-  }
-  elementName.value = {
-    size,
-    textValue,
-    type,
-    e_icon,
-    circle,
-    content_position,
-    divider_Value,
-    formName,
-    sliderSize,
-    placeholder,
-    option,
-    step,
-    min,
-    max,
-    defaultValue,
-    // radioValue,
-    src,
-    style,
-    fit,
-  };
+
+const formatCode = (htmlArray: Array<string>) => {
+  const htmlString = htmlArray.join('\n');
+  return htmlString;
+};
+const copyCode = () => {
+  vCode.mounted();
 };
 onMounted(() => {
   getItemTag();
-  console.log(renderedHTML.value);
 });
 </script>
 <style scoped>
-.containe {
-  font-family: monospace; /* 使用等宽字体以保留格式 */
-  white-space: pre; /* 保留空格和换行符 */
+/* 语法高亮 */
+.hljs-container {
+  position: relative;
+  display: block;
+  display: flex;
+  width: max-content;
+  margin-left: 100px;
+  padding: 30px 10px 2px 0;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: left;
+  background: #21252b;
+  box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+}
+
+/** 3个点 */
+.hljs-container::before {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  width: 12px;
+  height: 12px;
+  overflow: visible;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-indent: 75px;
+  background-color: #fc625d;
+  border-radius: 16px;
+  box-shadow:
+    20px 0 #fdbc40,
+    40px 0 #35cd4b;
+  content: attr(codetype);
+}
+
+/** 滚动条 */
+:deep(.hljs) {
+  overflow-x: auto;
+}
+
+:deep(.hljs::-webkit-scrollbar) {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+:deep(.hljs::-webkit-scrollbar-thumb) {
+  height: 30px !important;
+  background: #d1d8e6;
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: 19px;
+  opacity: 0.8;
+}
+
+:deep(.hljs::-webkit-scrollbar-thumb:hover) {
+  background: #a5b3cf;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+:deep(.hljs::-webkit-scrollbar-track-piece) {
+  width: 30px;
+  height: 30px;
+  background: #333;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/** 行数样式 */
+.hljs-code-number {
+  padding: 17px 10px 0;
+  color: #d1d8e6;
+  font-size: 12px;
+  list-style: none;
+  border-right: 1px solid #d1d8e6;
+}
+
+/** 复制样式 */
+.hljs-copy {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  display: none;
+  padding: 0 10px;
+  color: #66a9ff;
+  font-size: 10px;
+  background-color: #ecf5ff;
+  border-radius: 3px;
+  cursor: pointer;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="drawerPage">
     <div class="hljs-container" codetype="JavaScript" v-code>
-      <el-button style="position: absolute; right: 20px" @click="copyCode"> 复制 </el-button>
-      <highlightjs language="JavaScript" :autodetect="false" :code="code"></highlightjs>
+      <!--      <el-button style="position: absolute; right: 20px" @click="copyCode"> 复制 </el-button>-->
+      <highlightjs language="JavaScript" :autodetect="false" :code="code" class="hljs-code"></highlightjs>
     </div>
   </div>
 </template>
@@ -36,17 +36,20 @@ onMounted(() => {
 /* 语法高亮 */
 .hljs-container {
   position: relative;
-  display: block;
   display: flex;
   width: max-content;
   margin-left: 100px;
   padding: 30px 10px 2px 0;
   overflow-x: hidden;
+  max-height: 100vh;
   font-size: 14px;
   line-height: 24px;
   text-align: left;
   background: #21252b;
   box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: nowrap;
 }
 
 /** 3个点 */
@@ -105,8 +108,13 @@ onMounted(() => {
   display: none;
 }
 
+:deep(.language-xml) {
+  width: 90%;
+  font-size: 12px;
+}
+
 /** 行数样式 */
-.hljs-code-number {
+:deep(.hljs-code-number) {
   padding: 17px 10px 0;
   color: #d1d8e6;
   font-size: 12px;
@@ -115,13 +123,14 @@ onMounted(() => {
 }
 
 /** 复制样式 */
-.hljs-copy {
+:deep(.hljs-copy) {
   position: absolute;
   top: 50px;
   right: 30px;
   display: none;
   padding: 0 10px;
   color: #66a9ff;
+  font-weight: 700;
   font-size: 10px;
   background-color: #ecf5ff;
   border-radius: 3px;

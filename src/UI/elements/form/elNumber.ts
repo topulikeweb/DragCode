@@ -9,8 +9,8 @@ export default <IComponentType>{
   tagIcon: EditPen,
   value: '',
   attrs: {
-    labelName: helper_Input('属性名', helper_getRandomStr()),
-    formName: helper_Input('formName', '数字框'),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
+    label: helper_Input('label', '数字框'),
     size: helper_Radio('尺寸', [
       {
         key: 'small',

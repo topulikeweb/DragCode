@@ -80,7 +80,7 @@ export interface IElementName {
   content_position: string;
   divider_Value: string | undefined;
   formName: string | undefined;
-  sliderSize: number;
+  labelWidth: number;
   placeholder: string | undefined;
   option: any[] | undefined; // 你可以根据实际情况更具体定义 option 的类型
   step: number | undefined;

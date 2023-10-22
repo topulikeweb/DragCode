@@ -11,8 +11,8 @@ export default <IComponentType>{
   _opt_: helper_button('文本'),
   value: '',
   attrs: {
-    labelName: helper_Input('属性名', helper_getRandomStr()),
-    formName: helper_Input('formName', '文件上传'),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
+    label: helper_Input('label', '文件上传'),
     text: helper_Input('按钮文本', '上传文件'),
     size: helper_Radio('尺寸', [
       {

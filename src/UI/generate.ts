@@ -1,4 +1,5 @@
 import { Store } from '../pinia';
+import { formConf } from './elements/form.ts';
 
 /**
  * 转化attrs属性到组件属性
@@ -8,17 +9,35 @@ export function convertAttrsToString(attrs: any) {
   const attrStrings = [] as Array<string>;
   const valueStrings = [] as Array<string>;
   const formStrings = [] as Array<string>;
-  for (const key in attrs) {
+  const formItemStrings = [] as Array<string>;
+  // 组件属性
+  for (let key in attrs) {
     if (attrs[key].el_value !== '') {
-      if (key === 'text') {
-        const valueString = `${attrs[key].el_value}`;
-        valueStrings.push(valueString);
-      } else if (key === 'fieldName' || 'require') {
-        const formString = `${key}="${attrs[key].el_value}"`;
-        formStrings.push(formString);
-      } else {
-        const attrString = `${key}="${attrs[key].el_value}"`;
-        attrStrings.push(attrString);
+      switch (key) {
+        // fieldName用于设定这个组件的属性名，因此不用放到html上
+        case 'fieldName':
+          break;
+        case 'text':
+          valueStrings.push(`${attrs[key].el_value}`);
+          break;
+        case 'sliderSize':
+        case 'labelPosition':
+          let cKey;
+          if (key === 'sliderSize') {
+            cKey = 'label-width';
+            formStrings.push(`${cKey}="${attrs[key].el_value}"`);
+          }
+          if (key === 'labelPosition') {
+            cKey = 'label-position';
+            formStrings.push(`${cKey}="${attrs[key].el_value}"`);
+          }
+          break;
+        case 'label':
+        case 'require':
+          formItemStrings.push(`${key}="${attrs[key].el_value}"`);
+          break;
+        default:
+          attrStrings.push(`${key}="${attrs[key].el_value}"`);
       }
     }
   }
@@ -26,6 +45,7 @@ export function convertAttrsToString(attrs: any) {
     attrStrings: attrStrings.join(' '),
     valueStrings: valueStrings.join(' '),
     formStrings: formStrings.join(' '),
+    formItemStrings: formItemStrings.join(' '),
   };
 }
 
@@ -33,23 +53,29 @@ export function convertAttrsToString(attrs: any) {
  * 解析,生成html代码
  */
 export function renderHtml() {
-  const HtmlElementLists = [] as Array<string>;
+  const HtmlElementLists = [`<template>`];
   const lists = Store().elementList;
-  HtmlElementLists.push(`<template>`);
-  HtmlElementLists.push(`<el-form>`);
+
+  HtmlElementLists.push(`<el-form ${convertAttrsToString(formConf.attrs).formStrings}>`);
   for (let i = 0; i < lists.length; i++) {
-    const elementProperty = convertAttrsToString(lists[i].attrs).attrStrings;
-    const valueProperty = convertAttrsToString(lists[i].attrs).valueStrings;
-    const formProperty = convertAttrsToString(lists[i].attrs).formStrings;
-    HtmlElementLists.push(`<el-form-item ${formProperty}>`);
-    HtmlElementLists.push(`<${lists[i].tag} ${elementProperty}>${valueProperty}</${lists[i].tag}>`);
+    const { attrStrings, valueStrings, formItemStrings } = convertAttrsToString(lists[i].attrs);
+    HtmlElementLists.push(`<el-form-item ${formItemStrings}>`);
+    HtmlElementLists.push(`<${lists[i].tag} ${attrStrings}>${valueStrings}</${lists[i].tag}>`);
     HtmlElementLists.push(`</el-form-item>`);
   }
   HtmlElementLists.push(`</el-form>`);
   HtmlElementLists.push(`</template>`);
+  HtmlElementLists.push(`<script lang="ts" setup>`);
+  // HtmlElementLists.push(objectToJSONString(createFormData()));
+  // console.log(createFormData(), 1111);
+  HtmlElementLists.push(createFormData());
+  HtmlElementLists.push(`</script>`);
   return HtmlElementLists;
 }
 
+/**
+ * 复制代码功能
+ */
 export const vCode = {
   mounted(el: any) {
     //获取代码片段
@@ -57,7 +83,6 @@ export const vCode = {
     let pre = document.getElementsByTagName('pre')[0];
     let html = code?.innerHTML;
     let size = html.split('\n').length;
-
     //插入行数
     let ul = document.createElement('ul');
     for (let i = 1; i <= size; i++) {
@@ -101,3 +126,17 @@ export const vCode = {
     });
   },
 };
+
+export function createFormData() {
+  const lists = Store().elementList;
+  // 创建一个变量名为 formConf.attrs.formModel.el_value 的对象
+  const isObject: { [key: string]: { [key: string]: string } } = {
+    [formConf.attrs.formModel.el_value]: {},
+  };
+  for (let i = 0; i < lists.length; i++) {
+    let theKey = lists[i].attrs.fieldName.el_value;
+    // 添加属性 theKey 到 isObject[formConf.attrs.formModel.el_value] 对象
+    isObject[formConf.attrs.formModel.el_value][theKey] = '';
+  }
+  return `${formConf.attrs.formModel.el_value}: ${JSON.stringify(isObject[formConf.attrs.formModel.el_value], null, 2)}`;
+}

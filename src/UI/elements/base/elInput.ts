@@ -10,9 +10,9 @@ export default <IComponentType>{
   isShowPointer: false,
   value: '',
   attrs: {
-    labelName: helper_Input('属性名', helper_getRandomStr()),
-    formName: helper_Input('formName', 'input输入框'),
-    sliderSize: helper_slider('尺寸', 30),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
+    label: helper_Input('label', 'input输入框'),
+    labelWidth: helper_slider('尺寸', 30),
     defaultValue: helper_Input('默认值', ''),
     placeholder: helper_Input('placeholder', ''),
     require: helper_input_boolean('是否必填', false),

@@ -8,7 +8,7 @@
       </component>
       <div class="keyName">{{ item.label ?? '' }}</div>
       <el-form v-if="item.tag !== 'el-divider'" :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
-        <el-form-item :label="validate.formName">
+        <el-form-item :label="validate.label">
           <el-col :span="Math.floor(validate.sliderSize / 4.5)">
             <component
               v-model="validate.defaultValue"
@@ -34,7 +34,7 @@
     <!--渲染画布上的复杂组件-->
     <div v-else>
       <el-form :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
-        <el-form-item :label="validate.formName">
+        <el-form-item :label="validate.label">
           <component
             :is="item.tag"
             :class="classes"
@@ -116,8 +116,7 @@ export default defineComponent({
      */
     const validate = computed(() => {
       const size = props.item.attrs?.size?.el_value;
-      let sliderSize = props.item.attrs?.sliderSize?.el_value;
-      console.log(sliderSize);
+      let sliderSize = props.item.attrs?.labelWidth?.el_value;
       // 限制sliderSize大小
       if (sliderSize < 11) {
         sliderSize = 11;
@@ -128,7 +127,7 @@ export default defineComponent({
       const circle = props.item.attrs?.switch?.el_value;
       let content_position = props.item.attrs?.position?.el_value === '' ? 'center' : props.item.attrs?.position?.el_value;
       let divider_Value = props.item.attrs?.divider_Value?.el_value;
-      const formName = props.item.attrs?.formName?.el_value;
+      const label = props.item.attrs?.label?.el_value;
       const placeholder = props.item.attrs?.placeholder?.el_value;
       const option = props.item.attrs?.option?._opt_?._val_.option;
       const step = parseInt(props.item.attrs?.step?.el_value);
@@ -164,7 +163,7 @@ export default defineComponent({
         circle,
         content_position,
         divider_Value,
-        formName,
+        label,
         sliderSize,
         placeholder,
         option,

@@ -10,8 +10,8 @@ export default <IComponentType>{
   isShowPointer: false,
   value: '',
   attrs: {
-    labelName: helper_Input('属性名', helper_getRandomStr()),
-    formName: helper_Input('formName', 'select框'),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
+    label: helper_Input('label', 'select框'),
     size: helper_Radio('尺寸', [
       {
         key: 'small',

@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Grid } from '@element-plus/icons-vue';
-import { helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -33,6 +33,7 @@ export default <IComponentType>{
         value: 'scale-down',
       },
     ]),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
     width: helper_Input('宽度', 200),
     height: helper_Input('高度', 200),
     lazy: helper_input_boolean('是否开启懒加载', false),

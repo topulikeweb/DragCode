@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Files } from '@element-plus/icons-vue';
-import { helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
 import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
 
 export default <IComponentType>{
@@ -28,7 +28,7 @@ export default <IComponentType>{
       },
     ]),
     text: helper_Input('按钮文本', '提交'),
-    fieldName: helper_Input('字段名', '字段名'),
+    fieldName: helper_Input('属性名', helper_getRandomStr()),
     type: helper_Radio('类型', [
       {
         key: 'primary',

@@ -17,14 +17,14 @@ const getItemTag = () => {
   renderedHTMLList.value = renderHtml();
   // 转换为字符串
   console.log(renderedHTMLList);
-  code.value = formatCode(renderedHTMLList.value);
+  code.value = renderedHTMLList.value;
   console.log(code.value);
 };
 
-const formatCode = (htmlArray: Array<string>) => {
-  const htmlString = htmlArray.join('\n');
-  return htmlString;
-};
+// const formatCode = (htmlArray: Array<string>) => {
+//   const htmlString = htmlArray.join('\n');
+//   return htmlString;
+// };
 const copyCode = () => {
   vCode.mounted();
 };

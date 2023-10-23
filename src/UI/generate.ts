@@ -1,5 +1,10 @@
 import { Store } from '../pinia';
 import { formConf } from './elements/form.ts';
+import { IComponentType } from '../../type';
+
+const indent = '    ';
+// 创建的formDataName的名字
+const formDataName = formConf.attrs.formModel.el_value;
 
 /**
  * 转化attrs属性到组件属性
@@ -49,28 +54,76 @@ export function convertAttrsToString(attrs: any) {
   };
 }
 
+export function addChildren(_opt: IComponentType['_opt_']) {
+  let childrenElement = [];
+  for (let i = 0; i < _opt?._val_?.staticData?.length; i++) {
+    childrenElement.push(`   \n ${indent}${indent}<${_opt?._val_?.tag} label=""></${_opt?._val_?.tag}>`);
+  }
+  console.log(childrenElement.join(' '));
+  return childrenElement.join(' ');
+}
+
+/**
+ * 解析,生成html代码
+ */
 /**
  * 解析,生成html代码
  */
 export function renderHtml() {
-  const HtmlElementLists = [`<template>`];
-  const lists = Store().elementList;
+  const HtmlElementLists = [];
 
-  HtmlElementLists.push(`<el-form ${convertAttrsToString(formConf.attrs).formStrings}>`);
-  for (let i = 0; i < lists.length; i++) {
-    const { attrStrings, valueStrings, formItemStrings } = convertAttrsToString(lists[i].attrs);
-    HtmlElementLists.push(`<el-form-item ${formItemStrings}>`);
-    HtmlElementLists.push(`<${lists[i].tag} ${attrStrings}>${valueStrings}</${lists[i].tag}>`);
-    HtmlElementLists.push(`</el-form-item>`);
+  // 1. 提取常量
+  const formAttrs = convertAttrsToString(formConf.attrs);
+  const formModel = formConf.attrs.formModel.el_value;
+
+  // 2. 使用模板字符串构建 HTML 代码
+  const template = `
+ <template>
+      <el-form ${formAttrs.formStrings} :model="${formModel}">
+        ${generateFormItems()}
+      </el-form>
+    </template>
+  `;
+
+  // 3. 提取生成 form items 的逻辑
+  function generateFormItems() {
+    const formItems = [];
+    const lists = Store().elementList;
+
+    for (let i = 0; i < lists.length; i++) {
+      console.log((lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? '');
+      const { attrStrings, formItemStrings } = convertAttrsToString(lists[i].attrs);
+      const fieldName = JSON.parse(JSON.stringify((lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''));
+      // 4. 将代码拆分成更小的函数
+      const vModelDirective = generateVModelDirective(fieldName);
+      const content = lists[i]._opt_
+        ? `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${addChildren(lists[i]._opt_)}${indent}</${lists[i].tag}>`
+        : `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}></${lists[i].tag}>`;
+
+      formItems.push(`
+        <el-form-item ${formItemStrings}>
+          ${content}
+        </el-form-item>
+      `);
+    }
+    return formItems.join('');
   }
-  HtmlElementLists.push(`</el-form>`);
-  HtmlElementLists.push(`</template>`);
+
+  // 4. 生成 v-model 指令
+  function generateVModelDirective(fieldName) {
+    if (fieldName) {
+      return `v-model="${formDataName}.${fieldName}"`;
+    }
+    return '';
+  }
+
+  // 组装最终 HTML 结构
+  HtmlElementLists.push(template);
   HtmlElementLists.push(`<script lang="ts" setup>`);
-  // HtmlElementLists.push(objectToJSONString(createFormData()));
-  // console.log(createFormData(), 1111);
   HtmlElementLists.push(createFormData());
   HtmlElementLists.push(`</script>`);
-  return HtmlElementLists;
+
+  return HtmlElementLists.join('\n');
 }
 
 /**
@@ -127,6 +180,9 @@ export const vCode = {
   },
 };
 
+/**
+ * 创建'formData'数据
+ */
 export function createFormData() {
   const lists = Store().elementList;
   // 创建一个变量名为 formConf.attrs.formModel.el_value 的对象
@@ -134,9 +190,9 @@ export function createFormData() {
     [formConf.attrs.formModel.el_value]: {},
   };
   for (let i = 0; i < lists.length; i++) {
-    let theKey = lists[i].attrs.fieldName.el_value;
+    const theKey = (lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? '';
     // 添加属性 theKey 到 isObject[formConf.attrs.formModel.el_value] 对象
     isObject[formConf.attrs.formModel.el_value][theKey] = '';
   }
-  return `${formConf.attrs.formModel.el_value}: ${JSON.stringify(isObject[formConf.attrs.formModel.el_value], null, 2)}`;
+  return `let ${formConf.attrs.formModel.el_value}= reactive(${JSON.stringify(isObject[formConf.attrs.formModel.el_value], null, 2)})`;
 }

@@ -31,6 +31,9 @@ const createElement = (item: IComponentType) => {
   // 进行深拷贝，以免组件之间数据互相影响
   const newItem = JSON.parse(JSON.stringify(item));
   newItem._ID = helper_getRandomStr();
+  if (newItem.attrs.fieldName && newItem.attrs.fieldName.el_value) {
+    newItem.attrs.fieldName.el_value = helper_getRandomStr();
+  }
   elementList.value.push(newItem);
   Store().updateElementList(elementList.value);
 };

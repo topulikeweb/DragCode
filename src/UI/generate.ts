@@ -5,6 +5,7 @@ import { IComponentType } from '../../type';
 const indent = '    ';
 // 创建的formDataName的名字
 const formDataName = formConf.attrs.formModel.el_value;
+const lists = Store().elementList;
 
 /**
  * 转化attrs属性到组件属性
@@ -54,10 +55,19 @@ export function convertAttrsToString(attrs: any) {
   };
 }
 
-export function addChildren(_opt: IComponentType['_opt_']) {
+export function addChildren(_opt: any, _opt_: IComponentType['_opt_'], index: number) {
+  console.log(_opt_);
   let childrenElement = [];
-  for (let i = 0; i < _opt?._val_?.staticData?.length; i++) {
-    childrenElement.push(`   \n ${indent}${indent}<${_opt?._val_?.tag} label=""></${_opt?._val_?.tag}>`);
+  if (_opt?._val_?.option.length) {
+    for (let i = 0; i < _opt?._val_?.option.length; i++) {
+      childrenElement.push(
+        `\n${indent}${indent}${indent}${indent}<${_opt_?._val_?.tag} label="${_opt?._val_?.option[i].key}" value="${_opt?._val_?.option[i].value}"></${_opt_?._val_?.tag}>`,
+      );
+    }
+  } else {
+    childrenElement.push(
+      `\n${indent}${indent}${indent}${indent}<${_opt_?._val_?.tag}>${lists[index].attrs.text.el_value}</${_opt_?._val_?.tag}>`,
+    );
   }
   console.log(childrenElement.join(' '));
   return childrenElement.join(' ');
@@ -88,17 +98,21 @@ export function renderHtml() {
   // 3. 提取生成 form items 的逻辑
   function generateFormItems() {
     const formItems = [];
-    const lists = Store().elementList;
 
     for (let i = 0; i < lists.length; i++) {
-      console.log((lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? '');
       const { attrStrings, formItemStrings } = convertAttrsToString(lists[i].attrs);
       const fieldName = JSON.parse(JSON.stringify((lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''));
       // 4. 将代码拆分成更小的函数
       const vModelDirective = generateVModelDirective(fieldName);
       const content = lists[i]._opt_
-        ? `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${addChildren(lists[i]._opt_)}${indent}</${lists[i].tag}>`
-        : `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}></${lists[i].tag}>`;
+        ? `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${addChildren(
+            (lists[i].attrs.option && lists[i].attrs.option._opt_) ?? '',
+            lists[i]._opt_,
+            i,
+          )}\n${indent}${indent}${indent}</${lists[i].tag}>`
+        : `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${(lists[i].attrs.text && lists[i].attrs.text.el_value) ?? ''}</${
+            lists[i].tag
+          }>`;
 
       formItems.push(`
         <el-form-item ${formItemStrings}>
@@ -110,9 +124,9 @@ export function renderHtml() {
   }
 
   // 4. 生成 v-model 指令
-  function generateVModelDirective(fieldName) {
+  function generateVModelDirective(fieldName: string) {
     if (fieldName) {
-      return `v-model="${formDataName}.${fieldName}"`;
+      return `v-model="${formDataName}['${fieldName}']"`;
     }
     return '';
   }
@@ -120,9 +134,11 @@ export function renderHtml() {
   // 组装最终 HTML 结构
   HtmlElementLists.push(template);
   HtmlElementLists.push(`<script lang="ts" setup>`);
+  HtmlElementLists.push(requiredRecourse());
   HtmlElementLists.push(createFormData());
   HtmlElementLists.push(`</script>`);
-
+  HtmlElementLists.push(`<style scoped>`);
+  HtmlElementLists.push(`</style>`);
   return HtmlElementLists.join('\n');
 }
 
@@ -191,8 +207,20 @@ export function createFormData() {
   };
   for (let i = 0; i < lists.length; i++) {
     const theKey = (lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? '';
-    // 添加属性 theKey 到 isObject[formConf.attrs.formModel.el_value] 对象
-    isObject[formConf.attrs.formModel.el_value][theKey] = '';
+    if (theKey !== '') {
+      const default_value = (lists[i].attrs.defaultValue && lists[i].attrs.defaultValue.el_value) ?? '';
+      // 添加属性 theKey 到 isObject[formConf.attrs.formModel.el_value] 对象
+      isObject[formConf.attrs.formModel.el_value][theKey] = JSON.parse(JSON.stringify(default_value));
+    }
   }
   return `let ${formConf.attrs.formModel.el_value}= reactive(${JSON.stringify(isObject[formConf.attrs.formModel.el_value], null, 2)})`;
+}
+
+/**
+ * 引入html资源
+ */
+export function requiredRecourse() {
+  const recourseData = [];
+  recourseData.push(`import {reactive} from 'Vue'`);
+  return recourseData;
 }

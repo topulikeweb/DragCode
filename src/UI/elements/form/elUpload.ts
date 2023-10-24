@@ -28,7 +28,7 @@ export default <IComponentType>{
         value: 'large',
       },
     ]),
-    defaultValue: helper_Input('默认值', 1),
     require: helper_input_boolean('是否必填', false),
+    action: helper_Input('后端地址', ''),
   },
 };

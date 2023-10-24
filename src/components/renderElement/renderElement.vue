@@ -94,6 +94,10 @@ export default defineComponent({
       type: Object as () => IComponentType,
       required: true,
     },
+    index: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props: IRenderElement) {
     console.log('render Component');
@@ -143,11 +147,13 @@ export default defineComponent({
       };
       const formSliderSize = formConfig.value.attrs.sliderSize.el_value * 5;
       const labelPosition = formConfig.value.attrs.labelPosition.el_value;
+      const action = props.item.attrs?.action?.el_value;
       /**
        * 将设置的属性存入本地
        */
       if (lists.value.length !== 0 && props.item.attrs) {
-        const index = JSON.parse(localStorage.getItem('index') ?? '0');
+        // const index = JSON.parse(localStorage.getItem('index') ?? '0');
+        const index = props.index;
         if (index >= 0 && index < lists.value.length) {
           lists.value[index].attrs = props.item.attrs;
           Store().updateElementList(lists.value);
@@ -177,6 +183,7 @@ export default defineComponent({
         fit,
         formSliderSize,
         labelPosition,
+        action,
       };
     });
     return { classes, validate, lists };

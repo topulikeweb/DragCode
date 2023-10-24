@@ -21,7 +21,7 @@
               </el-icon>
             </div>
             <div class="elementItem">
-              <render-element :item="item" style="width: 95%" :list="lists" :key="item._ID"></render-element>
+              <render-element :item="item" style="width: 95%" :list="lists" :key="item._ID" :index="index"></render-element>
               <div class="infoBox"></div>
             </div>
             <div class="pointerBox" @click.stop="moveDown(item)">

@@ -7,13 +7,19 @@
         {{ validate.divider_Value }}
       </component>
       <div class="keyName">{{ item.label ?? '' }}</div>
-      <el-form v-if="item.tag !== 'el-divider'" :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
-        <el-form-item :label="validate.label">
+      <el-form
+        v-if="item.tag !== 'el-divider'"
+        :label-width="validate.formSliderSize"
+        :label-position="validate.labelPosition"
+        ref="formRef"
+      >
+        <el-form-item :label="validate.label" :prop="validate.fieldName">
           <el-col :span="Math.floor(validate.sliderSize / 4.5)">
             <component
               v-model="validate.defaultValue"
               :is="item.tag"
               :class="classes"
+              @click="requestData()"
               :style="validate.style"
               @click.stop
               v-bind="{ ...validate }"
@@ -72,6 +78,7 @@ import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
 import { formatDate } from '@vueuse/core';
 import { Store } from '../../pinia';
 import { formConf } from '../../UI/elements/form.ts';
+import { FormInstance } from 'element-plus';
 
 export default defineComponent({
   components: { Star, Check, Message, Delete, Edit },
@@ -104,6 +111,7 @@ export default defineComponent({
     const classes = ref('');
     const lists = ref(JSON.parse(localStorage.getItem('elementList') || '{}'));
     const formConfig = ref(formConf);
+    const formRef = ref<FormInstance>();
     /**
      * 根据组件类型 设置样式
      */
@@ -114,7 +122,6 @@ export default defineComponent({
       });
     };
     setClasses(props.item.tag);
-
     /**
      * 得到组件的size，value等值
      */
@@ -138,9 +145,11 @@ export default defineComponent({
       const min = parseInt(props.item.attrs?.min?.el_value);
       const max = parseInt(props.item.attrs?.max?.el_value);
       const defaultValue = props.item.attrs?.defaultValue?.el_value;
+      const submitFn = props.item.attrs?.submitFn?.el_value;
       // const radioValue = props.item.attrs?.option?.el_value;
       const src = props.item.attrs?.src?.el_value;
       const fit = props.item.attrs?.fit?.el_value;
+      const fieldName = props.item.attrs?.fieldName?.el_value;
       const style = {
         width: props.item.attrs?.width?.el_value + 'px',
         height: props.item.attrs?.height?.el_value + 'px',
@@ -148,6 +157,8 @@ export default defineComponent({
       const formSliderSize = formConfig.value.attrs.sliderSize.el_value * 5;
       const labelPosition = formConfig.value.attrs.labelPosition.el_value;
       const action = props.item.attrs?.action?.el_value;
+      const rule = formConfig.value.attrs.rule.el_value;
+      const ref = formConfig.value.attrs.ref.el_value;
       /**
        * 将设置的属性存入本地
        */
@@ -184,9 +195,26 @@ export default defineComponent({
         formSliderSize,
         labelPosition,
         action,
+        submitFn,
+        fieldName,
+        ref,
+        rule,
       };
     });
-    return { classes, validate, lists };
+    /**
+     * 为按钮绑定提交事件
+     */
+    const requestData = () => async (formEl: FormInstance) => {
+      if (!formEl) return;
+      await formEl.validate((valid, fields) => {
+        if (valid) {
+          console.log('submit!');
+        } else {
+          console.log('error submit!', fields);
+        }
+      });
+    };
+    return { classes, validate, lists, requestData, formRef };
   },
 });
 </script>

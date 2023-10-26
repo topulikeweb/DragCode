@@ -56,16 +56,17 @@
         <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs ?? {}" :item="item" :key="index" class="renderElement" />
         <div style="width: 100%; height: 10vh"></div>
       </el-scrollbar>
+      <!--      添加规则按钮-->
+      <el-button @click="drawer = true">添加规则</el-button>
     </el-tab-pane>
     <el-tab-pane label="表单属性">
-      <RenderMenuConfComponent
-        v-for="(item, index) in formConfig.attrs ?? {}"
-        :item="item"
-        :key="index"
-        class="renderElement"
-      ></RenderMenuConfComponent>
+      <RenderMenuConfComponent v-for="(item, index) in formConfig.attrs ?? {}" :item="item" :key="index" class="renderElement" />
     </el-tab-pane>
   </el-tabs>
+
+  <el-drawer v-model="drawer" title="添加你的规则" direction="ttb" :before-close="handleClose" size="200">
+    <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs.rules ?? {}" :item="item" :key="index" class="renderElement" />
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
@@ -86,6 +87,7 @@ let menuConf = ref<IComponentType>({} as IComponentType);
 // 对话框的boolean值
 const visible = ref(false);
 let formConfig = ref({} as IFormConfig);
+const drawer = ref(false);
 formConfig.value = formConf;
 /**
  * 是否展示指示箭头

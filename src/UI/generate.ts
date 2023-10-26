@@ -1,6 +1,9 @@
 import { Store } from '../pinia';
 import { formConf } from './elements/form.ts';
 import { IComponentType } from '../../type';
+import { FormInstance } from 'element-plus';
+import { Message } from '@element-plus/icons-vue';
+import { reactive } from 'vue';
 
 const indent = '    ';
 // 创建的formDataName的名字
@@ -16,37 +19,40 @@ export function convertAttrsToString(attrs: any) {
   const valueStrings = [] as Array<string>;
   const formStrings = [] as Array<string>;
   const formItemStrings = [] as Array<string>;
-  // 组件属性
   for (let key in attrs) {
     if (attrs[key].el_value !== '') {
       switch (key) {
-        // fieldName用于设定这个组件的属性名，因此不用放到html上
         case 'fieldName':
+          // fieldName用于设定这个组件的属性名，因此不用放到html上
           break;
         case 'text':
-          valueStrings.push(`${attrs[key].el_value}`);
+          valueStrings.push(`:text="${attrs[key].el_value}"`);
           break;
         case 'sliderSize':
+          formStrings.push(`label-width="${attrs[key].el_value}px"`);
+          break;
         case 'labelPosition':
-          let cKey;
-          if (key === 'sliderSize') {
-            cKey = 'label-width';
-            formStrings.push(`${cKey}="${attrs[key].el_value}"`);
-          }
-          if (key === 'labelPosition') {
-            cKey = 'label-position';
-            formStrings.push(`${cKey}="${attrs[key].el_value}"`);
-          }
+          formStrings.push(`:label-position="${attrs[key].el_value}"`);
+          break;
+        case 'rule':
+          formStrings.push(`:rule="${attrs[key].el_value}"`);
+          break;
+        case 'ref':
+          formStrings.push(`ref="${attrs[key].el_value}"`);
           break;
         case 'label':
         case 'require':
-          formItemStrings.push(`${key}="${attrs[key].el_value}"`);
+          formItemStrings.push(`:${key}="${attrs[key].el_value}"`);
+          break;
+        case 'submitFn':
+          attrStrings.push(`@click="${attrs[key].el_value}"`);
           break;
         default:
-          attrStrings.push(`${key}="${attrs[key].el_value}"`);
+          attrStrings.push(`:${key}="${attrs[key].el_value}"`);
       }
     }
   }
+
   return {
     attrStrings: attrStrings.join(' '),
     valueStrings: valueStrings.join(' '),
@@ -56,12 +62,16 @@ export function convertAttrsToString(attrs: any) {
 }
 
 export function addChildren(_opt: any, _opt_: IComponentType['_opt_'], index: number) {
-  console.log(_opt_);
   let childrenElement = [];
   if (_opt?._val_?.option.length) {
     for (let i = 0; i < _opt?._val_?.option.length; i++) {
       childrenElement.push(
-        `\n${indent}${indent}${indent}${indent}<${_opt_?._val_?.tag} label="${_opt?._val_?.option[i].key}" value="${_opt?._val_?.option[i].value}"></${_opt_?._val_?.tag}>`,
+        `\n$;
+            {
+              indent;
+            }${indent}${indent}${indent}
+            <${_opt_?._val_?.tag} label = "${_opt?._val_?.option[i].key}";
+            value = "${_opt?._val_?.option[i].value}" > </${_opt_?._val_?.tag}>`,
       );
     }
   } else {
@@ -73,9 +83,6 @@ export function addChildren(_opt: any, _opt_: IComponentType['_opt_'], index: nu
   return childrenElement.join(' ');
 }
 
-/**
- * 解析,生成html代码
- */
 /**
  * 解析,生成html代码
  */
@@ -115,7 +122,7 @@ export function renderHtml() {
           }>`;
 
       formItems.push(`
-        <el-form-item ${formItemStrings}>
+        <el-form-item ${formItemStrings} prop="${(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''}">
           ${content}
         </el-form-item>
       `);
@@ -136,6 +143,8 @@ export function renderHtml() {
   HtmlElementLists.push(`<script lang="ts" setup>`);
   HtmlElementLists.push(requiredRecourse());
   HtmlElementLists.push(createFormData());
+  HtmlElementLists.push(createRequestFn());
+  HtmlElementLists.push(createRules());
   HtmlElementLists.push(`</script>`);
   HtmlElementLists.push(`<style scoped>`);
   HtmlElementLists.push(`</style>`);
@@ -217,10 +226,52 @@ export function createFormData() {
 }
 
 /**
- * 引入html资源
+ * 引入资源
  */
 export function requiredRecourse() {
   const recourseData = [];
   recourseData.push(`import {reactive} from 'Vue'`);
   return recourseData;
 }
+
+/**
+ * 生成axios请求的函数
+ */
+export function createRequestFn() {
+  return `const submitFn = ${async (formEl: FormInstance | undefined) => {
+    if (!formEl) return;
+    await formEl.validate((valid, fields) => {
+      if (valid) {
+        console.log('submit!');
+      } else {
+        console.log('error submit!', fields);
+      }
+    });
+  }}`;
+}
+
+/**
+ * 生成表单的规则
+ */
+
+export function createRules() {
+  const rules = {};
+  for (let i = 0; i < lists.length; i++) {
+    // 创建rules里面的变量数组
+    const rulesFiledName = [];
+    for (const key in lists[i].attrs.rules) {
+      if (lists[i].attrs.rules.hasOwnProperty(key)) {
+        let rulesItemObj = {};
+        rulesItemObj[key] = lists[i].attrs.rules[key].el_value;
+        rulesItemObj['message'] = 'You broke the rules';
+        rulesItemObj['trigger'] = 'blur';
+        // 为这个变量添加上相应的规则属性
+        rulesFiledName.push(rulesItemObj);
+      }
+    }
+    rules[(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''] = rulesFiledName;
+  }
+  return `const rules =reactive(${JSON.stringify(rules, null, 2)})`;
+}
+
+console.log(createRules());

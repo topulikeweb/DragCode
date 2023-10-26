@@ -86,5 +86,6 @@ export default <IComponentType>{
     ]),
     switch: helper_input_boolean('是否为圆角', false),
     require: helper_input_boolean('是否必填', false),
+    submitFn: helper_Input('触发的函数名', 'submitFn'),
   },
 };

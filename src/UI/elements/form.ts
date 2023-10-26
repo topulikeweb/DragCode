@@ -25,6 +25,8 @@ export const formConf = {
         value: 'top',
       },
     ]),
+    ref: helper_Input('表单的ref', 'ruleFormRef'),
+    rule: helper_Input('表单的rule变量名', 'rules'),
     // disabled:help('禁用', false),
     // inline: helper.input_boolean('行内模式', false),
     // hideRequiredAsterisk: helper.input_boolean('必填标星', false),

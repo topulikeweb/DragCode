@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia';
-import { IComponentType } from '../../type';
-import { state } from 'vue-tsc/out/shared';
+import { defineStore } from "pinia";
+import { IComponentType } from "../../type";
 
-export const Store = defineStore('elementList', {
+
+export const Store = defineStore("elementList", {
   state: () => ({
-    elementList: JSON.parse((localStorage.getItem('elementList') as string) ?? '[]') as IComponentType[],
-    componentDetail: JSON.parse((localStorage.getItem('componentDetail') as string) ?? '[]') as IComponentType,
-    index: JSON.parse(localStorage.getItem('index') ?? '0') as Number,
+    elementList: JSON.parse((localStorage.getItem("elementList") as string) ?? "[]") as IComponentType[],
+    componentDetail: JSON.parse((localStorage.getItem("componentDetail") as string) ?? "[]") as IComponentType,
+    index: JSON.parse(localStorage.getItem("index") ?? "0") as Number
   }),
   getters: {},
   actions: {
@@ -16,7 +16,7 @@ export const Store = defineStore('elementList', {
      * @type IComponentType[]
      */
     updateElementList(elementList: IComponentType[]) {
-      localStorage.setItem('elementList', JSON.stringify(elementList));
+      localStorage.setItem("elementList", JSON.stringify(elementList));
     },
     /**
      * 更新侧边组件详情的数据
@@ -24,7 +24,7 @@ export const Store = defineStore('elementList', {
      * @type IComponentType
      */
     updateComponentDetail(componentDetail: IComponentType) {
-      localStorage.setItem('componentDetail', JSON.stringify(componentDetail));
+      localStorage.setItem("componentDetail", JSON.stringify(componentDetail));
     },
     /**
      * 将当前点击的elementItem的索引存放到localStorage中
@@ -33,7 +33,7 @@ export const Store = defineStore('elementList', {
       let index = this.elementList.findIndex((item) => {
         return item._ID === elementItem._ID;
       });
-      localStorage.setItem('index', JSON.stringify(index));
-    },
-  },
+      localStorage.setItem("index", JSON.stringify(index));
+    }
+  }
 });

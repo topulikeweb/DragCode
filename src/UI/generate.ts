@@ -2,8 +2,6 @@ import { Store } from '../pinia';
 import { formConf } from './elements/form.ts';
 import { IComponentType } from '../../type';
 import { FormInstance } from 'element-plus';
-import { Message } from '@element-plus/icons-vue';
-import { reactive } from 'vue';
 
 const indent = '    ';
 // 创建的formDataName的名字
@@ -19,6 +17,8 @@ export function convertAttrsToString(attrs: any) {
   const valueStrings = [] as Array<string>;
   const formStrings = [] as Array<string>;
   const formItemStrings = [] as Array<string>;
+  let ref = '';
+
   for (let key in attrs) {
     if (attrs[key].el_value !== '') {
       switch (key) {
@@ -35,20 +35,21 @@ export function convertAttrsToString(attrs: any) {
           formStrings.push(`:label-position="${attrs[key].el_value}"`);
           break;
         case 'rule':
-          formStrings.push(`:rule="${attrs[key].el_value}"`);
+          // formStrings.push(`:rule="${attrs[key].el_value}"`);
           break;
         case 'ref':
           formStrings.push(`ref="${attrs[key].el_value}"`);
+          ref = attrs[key].el_value;
+          console.log(ref);
           break;
         case 'label':
-        case 'require':
-          formItemStrings.push(`:${key}="${attrs[key].el_value}"`);
+          formItemStrings.push(`${key}="${attrs[key].el_value}"`);
           break;
         case 'submitFn':
-          attrStrings.push(`@click="${attrs[key].el_value}"`);
+          attrStrings.push(`@click="${attrs[key].el_value}(${formConf.attrs.ref.el_value})"`);
           break;
         default:
-          attrStrings.push(`:${key}="${attrs[key].el_value}"`);
+          attrStrings.push(`${key}="${attrs[key].el_value}"`);
       }
     }
   }
@@ -230,7 +231,7 @@ export function createFormData() {
  */
 export function requiredRecourse() {
   const recourseData = [];
-  recourseData.push(`import {reactive} from 'Vue'`);
+  recourseData.push(`import {reactive} from 'vue'`);
   return recourseData;
 }
 
@@ -254,24 +255,61 @@ export function createRequestFn() {
  * 生成表单的规则
  */
 
-export function createRules() {
-  const rules = {};
+function createRules() {
+  const rules = {} as any;
   for (let i = 0; i < lists.length; i++) {
-    // 创建rules里面的变量数组
     const rulesFiledName = [];
+    let minMaxObject = {} as any; // 创建一个对象来存储 min 和 max 属性
     for (const key in lists[i].attrs.rules) {
       if (lists[i].attrs.rules.hasOwnProperty(key)) {
-        let rulesItemObj = {};
-        rulesItemObj[key] = lists[i].attrs.rules[key].el_value;
-        rulesItemObj['message'] = 'You broke the rules';
-        rulesItemObj['trigger'] = 'blur';
-        // 为这个变量添加上相应的规则属性
-        rulesFiledName.push(rulesItemObj);
+        if (key === 'min' || key === 'max') {
+          minMaxObject[key] = parseInt(lists[i].attrs.rules[key].el_value);
+          minMaxObject['message'] = 'You broke the rules';
+          minMaxObject['trigger'] = 'blur';
+        } else {
+          let rulesItemObj = {} as any;
+          rulesItemObj[key] = parseInt(lists[i].attrs.rules[key].el_value);
+          rulesItemObj['message'] = 'You broke the rules';
+          rulesItemObj['trigger'] = 'blur';
+          rulesFiledName.push(rulesItemObj);
+        }
       }
     }
-    rules[(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''] = rulesFiledName;
+    if (Object.keys(minMaxObject).length > 0) {
+      rulesFiledName.push(minMaxObject); // 将包含 min 和 max 属性的对象添加到数组
+    }
+    if (rulesFiledName.length !== 0) {
+      rules[(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''] = rulesFiledName;
+    }
   }
-  return `const rules =reactive(${JSON.stringify(rules, null, 2)})`;
+  console.log(rules);
+  return `const rules = reactive(${JSON.stringify(rules, null, 2)})`;
 }
 
-console.log(createRules());
+// const arr = [
+//   { max: 2, message: 'You broke the rules', trigger: 'blur' },
+//   { min: 0, message: 'You broke the rules', trigger: 'blur' },
+//   { data: 1, message: 'You broke the rules', trigger: 'blur' },
+// ];
+//
+// const mergedArr = [];
+//
+// arr.forEach((obj) => {
+//   const existingObj = mergedArr.find((item) => ('max' in obj ? 'max' in item : 'min' in item));
+//
+//   if (existingObj) {
+//     if ('max' in obj) {
+//       existingObj.max = obj.max;
+//     }
+//     if ('min' in obj) {
+//       existingObj.min = obj.min;
+//     }
+//
+//     existingObj.message = obj.message;
+//     existingObj.trigger = obj.trigger;
+//   } else {
+//     mergedArr.push(obj);
+//   }
+// });
+//
+// console.log(mergedArr, 123);

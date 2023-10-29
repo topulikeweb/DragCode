@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Edit } from '@element-plus/icons-vue';
-import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio, helper_slider } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',

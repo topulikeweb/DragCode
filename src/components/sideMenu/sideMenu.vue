@@ -36,6 +36,8 @@ const createElement = (item: IComponentType) => {
   }
   elementList.value.push(newItem);
   Store().updateElementList(elementList.value);
+  Store().updateRules();
+  Store().updateFromData();
 };
 </script>
 

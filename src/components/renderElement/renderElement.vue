@@ -1,53 +1,47 @@
 <template>
   <div class="renderComponent">
-    <div v-if="item._opt_ === undefined">
-      <!--      专门用于渲染分割线-->
-      <component v-if="item.tag === 'el-divider'" :is="item.tag" :content-position="validate.content_position">
-        <!--        分割线的文本-->
-        {{ validate.divider_Value }}
-      </component>
-      <div class="keyName">{{ item.label ?? '' }}</div>
-      <el-form
-        v-if="item.tag !== 'el-divider'"
-        :label-width="validate.formSliderSize"
-        :label-position="validate.labelPosition"
-        ref="formRef"
-      >
-        <el-form-item :label="validate.label" :prop="validate.fieldName">
-          <el-col :span="Math.floor(validate.sliderSize / 4.5)">
-            <component
-              v-model="validate.defaultValue"
-              :is="item.tag"
-              :class="classes"
-              @click="requestData()"
-              :style="validate.style"
-              @click.stop
-              v-bind="{ ...validate }"
-              :content-position="validate.content_position"
-            >
-              <!--        分割线的文本-->
-              {{ validate.divider_Value }}
-              <el-icon class="el-icon--right" v-if="validate.e_icon">
-                <component :is="validate.e_icon" />
-              </el-icon>
-              <div>{{ validate.textValue }}</div>
-            </component>
-          </el-col>
-        </el-form-item>
-      </el-form>
-    </div>
-    <!--    复选框-->
-    <!--渲染画布上的复杂组件-->
-    <div v-else>
-      <el-form :label-width="validate.formSliderSize" :label-position="validate.labelPosition">
-        <el-form-item :label="validate.label">
+    <!--    用于渲染分割线-->
+    <component v-if="item.tag === 'el-divider'" :is="item.tag" :content-position="validate.content_position">
+      <!--        分割线的文本-->
+      {{ validate.divider_Value }}
+    </component>
+
+    <el-form
+      :label-width="validate.formSliderSize"
+      :label-position="validate.labelPosition"
+      ref="formRef"
+      :model="formData"
+      :rules="rules"
+      v-if="item.tag !== 'el-divider'"
+      status-icon
+    >
+      <el-form-item :label="validate.label" :prop="validate.fieldName" class="renderElement">
+        <el-col :span="Math.floor(validate.sliderSize / 4.5)">
           <component
+            v-if="item._opt_ === undefined"
+            :is="item.tag"
+            :class="classes"
+            @click="requestData(formRef)"
+            :style="validate.style"
+            @click.stop
+            v-bind="{ ...validate }"
+            v-model="formData[validate.fieldName]"
+          >
+            {{ validate.divider_Value }}
+            <el-icon class="el-icon--right" v-if="validate.e_icon">
+              <component :is="validate.e_icon" />
+            </el-icon>
+            <div>{{ validate.textValue }}</div>
+          </component>
+
+          <component
+            v-else
             :is="item.tag"
             :class="classes"
             style="text-align: center"
             @click.stop
             :size="validate.size"
-            v-model="validate.defaultValue"
+            v-model="formData[validate.fieldName]"
           >
             <component
               v-if="item._opt_._val_?.staticData !== undefined"
@@ -57,20 +51,19 @@
               :value="opt.value"
               :key="opt.key"
               @click.stop
-            >
-            </component>
+            ></component>
             <component v-else :is="item._opt_._val_?.tag">
               {{ validate.textValue }}
             </component>
           </component>
-        </el-form-item>
-      </el-form>
-    </div>
+        </el-col>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
 import { elements } from '../../UI';
@@ -79,10 +72,12 @@ import { formatDate } from '@vueuse/core';
 import { Store } from '../../pinia';
 import { formConf } from '../../UI/elements/form.ts';
 import { FormInstance } from 'element-plus';
+import { createFormData } from '../../UI/generate.ts';
 
 export default defineComponent({
   components: { Star, Check, Message, Delete, Edit },
   methods: {
+    createFormData,
     formatDate,
     elements() {
       return elements;
@@ -112,6 +107,8 @@ export default defineComponent({
     const lists = ref(JSON.parse(localStorage.getItem('elementList') || '{}'));
     const formConfig = ref(formConf);
     const formRef = ref<FormInstance>();
+    let formData = reactive<any>(Store().formData);
+    const rules = reactive(Store().rules);
     /**
      * 根据组件类型 设置样式
      */
@@ -165,12 +162,16 @@ export default defineComponent({
       if (lists.value.length !== 0 && props.item.attrs) {
         // const index = JSON.parse(localStorage.getItem('index') ?? '0');
         const index = props.index;
-        if (index >= 0 && index < lists.value.length) {
-          lists.value[index].attrs = props.item.attrs;
+        // TODO 这里有一个bug导致数组更新问题
+        if (lists.value[index]?.attrs?.fieldName !== props.item?.attrs?.fieldName) {
+        }
+        if (index >= 0 && index < lists.value.length && lists.value[index]?.attrs?.fieldName === props.item?.attrs?.fieldName) {
+          lists.value[index].attrs = Object.assign({}, props.item.attrs);
           Store().updateElementList(lists.value);
+          Store().updateRules();
+          Store().updateFromData();
         }
       }
-
       // console.log(JSON.parse(lists.value)[JSON.parse(localStorage.getItem('index') ?? '0')].attrs, 111);
       return {
         size,
@@ -204,7 +205,7 @@ export default defineComponent({
     /**
      * 为按钮绑定提交事件
      */
-    const requestData = () => async (formEl: FormInstance) => {
+    const requestData = async (formEl: FormInstance) => {
       if (!formEl) return;
       await formEl.validate((valid, fields) => {
         if (valid) {
@@ -214,7 +215,20 @@ export default defineComponent({
         }
       });
     };
-    return { classes, validate, lists, requestData, formRef };
+    // watch(lists.value, () => {
+    //   console.log(123);
+    //   Store().updateRules();
+    //   Store().updateFromData();
+    // });
+    return {
+      classes,
+      validate,
+      lists,
+      requestData,
+      formRef,
+      formData,
+      rules,
+    };
   },
 });
 </script>

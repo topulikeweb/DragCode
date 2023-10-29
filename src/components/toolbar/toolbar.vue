@@ -59,6 +59,8 @@ const cleanAll = () => {
   }
   elementList.length = 0;
   Store().updateElementList(elementList);
+  Store().updateFromData();
+  Store().updateRules();
   centerDialogVisible.value = false;
 };
 const drawPage = () => {

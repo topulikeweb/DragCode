@@ -65,7 +65,12 @@
   </el-tabs>
 
   <el-drawer v-model="drawer" title="添加你的规则" direction="ttb" :before-close="handleClose" size="200">
-    <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs.rules ?? {}" :item="item" :key="index" class="renderElement" />
+    <RenderMenuConfComponent
+      v-for="(item, index) in (menuConf.attrs && menuConf.attrs.rules) ?? {}"
+      :item="item"
+      :key="index"
+      class="renderElement"
+    />
   </el-drawer>
 </template>
 
@@ -195,6 +200,14 @@ const copyElement = () => {
   }
   lists.value.push(copyElementItem);
   Store().updateElementList(lists.value);
+};
+
+const handleClose = () => {
+  ElMessage({
+    message: '规则已成功添加',
+    type: 'success',
+  });
+  drawer.value = false;
 };
 </script>
 

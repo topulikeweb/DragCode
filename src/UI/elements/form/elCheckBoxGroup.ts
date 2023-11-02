@@ -29,5 +29,8 @@ export default <IComponentType>{
     value: helper_Input('默认值', '1'),
     require: helper_input_boolean('是否必填', false),
     fieldName: helper_Input('属性名', helper_getRandomStr()),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

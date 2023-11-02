@@ -18,7 +18,7 @@ export function convertAttrsToString(attrs: any) {
   const formStrings = [] as Array<string>;
   const formItemStrings = [] as Array<string>;
   let ref = '';
-
+  let sliderSize = 0;
   for (let key in attrs) {
     if (attrs[key].el_value !== '') {
       switch (key) {
@@ -48,6 +48,9 @@ export function convertAttrsToString(attrs: any) {
         case 'submitFn':
           attrStrings.push(`@click="${attrs[key].el_value}(${formConf.attrs.ref.el_value})"`);
           break;
+        case 'labelWidth':
+          sliderSize = parseInt(attrs[key].el_value);
+          break;
         default:
           attrStrings.push(`${key}="${attrs[key].el_value}"`);
       }
@@ -59,6 +62,7 @@ export function convertAttrsToString(attrs: any) {
     valueStrings: valueStrings.join(' '),
     formStrings: formStrings.join(' '),
     formItemStrings: formItemStrings.join(' '),
+    sliderSize,
   };
 }
 
@@ -67,12 +71,8 @@ export function addChildren(_opt: any, _opt_: IComponentType['_opt_'], index: nu
   if (_opt?._val_?.option.length) {
     for (let i = 0; i < _opt?._val_?.option.length; i++) {
       childrenElement.push(
-        `\n$;
-            {
-              indent;
-            }${indent}${indent}${indent}
-            <${_opt_?._val_?.tag} label = "${_opt?._val_?.option[i].key}";
-            value = "${_opt?._val_?.option[i].value}" > </${_opt_?._val_?.tag}>`,
+        `
+${indent}${indent}${indent}<${_opt_?._val_?.tag} label = "${_opt?._val_?.option[i].key}" value = "${_opt?._val_?.option[i].value}" ></${_opt_?._val_?.tag}>`,
       );
     }
   } else {
@@ -124,7 +124,9 @@ export function renderHtml() {
 
       formItems.push(`
         <el-form-item ${formItemStrings} prop="${(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''}">
+        <el-col :span="${Math.floor(convertAttrsToString(lists[i].attrs).sliderSize / 4.5)}">
           ${content}
+          </el-col>
         </el-form-item>
       `);
     }
@@ -143,6 +145,7 @@ export function renderHtml() {
   HtmlElementLists.push(template);
   HtmlElementLists.push(`<script lang="ts" setup>`);
   HtmlElementLists.push(requiredRecourse());
+  HtmlElementLists.push(`const ${formConf.attrs.ref.el_value}=reactive<FormInstance>()`);
   HtmlElementLists.push(createFormData());
   HtmlElementLists.push(createRequestFn());
   HtmlElementLists.push(createRules());
@@ -239,7 +242,7 @@ export function requiredRecourse() {
  * 生成axios请求的函数
  */
 export function createRequestFn() {
-  return `const submitFn = ${async (formEl: FormInstance | undefined) => {
+  return `const submitFn = ${async (formEl: FormInstance) => {
     if (!formEl) return;
     await formEl.validate((valid, fields) => {
       if (valid) {

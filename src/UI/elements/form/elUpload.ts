@@ -30,5 +30,8 @@ export default <IComponentType>{
     ]),
     require: helper_input_boolean('是否必填', false),
     action: helper_Input('后端地址', ''),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

@@ -15,6 +15,7 @@
           </div>
         </div>
       </el-card>
+      <el-button size="large" class="testBtn" @click="toTest">测试代码 </el-button>
     </div>
   </div>
 </template>
@@ -22,10 +23,15 @@
 import { onMounted, ref } from 'vue';
 import { renderHtml, vCode } from '../../UI/generate.ts';
 import 'vue-highlight-code/dist/style.css';
+import router from '../../router';
 
 let code = ref('');
 const getItemTag = () => {
   code.value = renderHtml();
+};
+
+const toTest = () => {
+  router.push('/test');
 };
 
 // const formatCode = (htmlArray: Array<string>) => {

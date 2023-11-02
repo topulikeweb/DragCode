@@ -1,11 +1,16 @@
 @import "../../styles/variables";
 
 .el-space-style {
-  border: 1px $borderColor dotted;
+  border: 1px solid #D1D1D1; /* 浅灰色边框 */
   width: 97%;
-  font-size: 14px;
+  font-size: 14px; /* 适当增加字体大小，更符合 macOS 风格 */
   height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #F8F8F8; /* 更浅的背景颜色，适合 macOS 风格 */
+}
+
+.renderElement {
+  margin: 10px;
 }

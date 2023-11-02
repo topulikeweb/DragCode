@@ -57,6 +57,7 @@ export interface IElements {
  */
 export interface IRenderElement {
   item: IComponentType;
+  index: number;
 }
 
 export interface IFormConfig {

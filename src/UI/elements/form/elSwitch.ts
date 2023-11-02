@@ -26,6 +26,8 @@ export default <IComponentType>{
         value: 'large',
       },
     ]),
-    require: helper_input_boolean('是否必填', false),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

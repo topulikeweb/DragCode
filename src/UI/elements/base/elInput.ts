@@ -30,7 +30,7 @@ export default <IComponentType>{
       // ]),
       require: helper_input_boolean('是否必填', false),
       min: helper_Input('最小长度', 0),
-      max: helper_Input('最大长度', 0),
+      max: helper_Input('最大长度', 10),
     },
   },
 };

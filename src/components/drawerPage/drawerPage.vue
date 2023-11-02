@@ -64,14 +64,11 @@
     </el-tab-pane>
   </el-tabs>
 
-  <el-drawer v-model="drawer" title="添加你的规则" direction="ttb" :before-close="handleClose" size="200">
-    <RenderMenuConfComponent
-      v-for="(item, index) in (menuConf.attrs && menuConf.attrs.rules) ?? {}"
-      :item="item"
-      :key="index"
-      class="renderElement"
-    />
+  <el-drawer v-model="drawer" title="添加你的规则" :before-close="handleClose" size="400">
+    <RenderMenuConfComponent v-for="(item, index) in (menuConf.attrs && menuConf.attrs.rules) ?? {}" :item="item" :key="index" class="renderElement" />
   </el-drawer>
+
+  <router-view></router-view>
 </template>
 
 <script setup lang="ts">

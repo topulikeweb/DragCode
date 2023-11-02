@@ -6,7 +6,7 @@
         <el-divider>{{ group.title }}</el-divider>
         <!--        按钮-->
         <div v-for="(item, index) in group.list" :key="name" @click="createElement(item)">
-          <el-button class="sideBtn" :icon="item.tagIcon ?? ''" :key="index">
+          <el-button :class="changeClassName(index)" :key="index">
             {{ item.text }}
           </el-button>
         </div>
@@ -23,7 +23,6 @@ import { helper_getRandomStr } from '../../UI/helper.ts';
 import { ref } from 'vue';
 
 const elementList = ref(Store().elementList);
-
 /**
  * 创建组件到数组
  */
@@ -38,6 +37,18 @@ const createElement = (item: IComponentType) => {
   Store().updateElementList(elementList.value);
   Store().updateRules();
   Store().updateFromData();
+};
+
+const changeClassName = (index: number) => {
+  let className = '';
+  if (index < 2) {
+    className = 'wiBtn';
+  } else if (index > 2 && index < 5) {
+    className = 'fontBtn';
+  } else {
+    className = 'sideBtn';
+  }
+  return className;
 };
 </script>
 

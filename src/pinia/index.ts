@@ -9,6 +9,7 @@ export const Store = defineStore('elementList', {
     index: JSON.parse(localStorage.getItem('index') ?? '0') as Number,
     formData: JSON.parse(<string>localStorage.getItem('formData') ?? '{}') as Object,
     rules: JSON.parse(<string>localStorage.getItem('rules') ?? '{}') as Object,
+    token: JSON.parse(<string>localStorage.getItem('token')) ?? undefined,
   }),
   getters: {},
   actions: {
@@ -18,6 +19,7 @@ export const Store = defineStore('elementList', {
      * @type IComponentType[]
      */
     updateElementList(elementList: IComponentType[]) {
+      this.elementList = elementList;
       localStorage.setItem('elementList', JSON.stringify(elementList));
     },
     /**
@@ -36,6 +38,9 @@ export const Store = defineStore('elementList', {
         return item._ID === elementItem._ID;
       });
       localStorage.setItem('index', JSON.stringify(index));
+    },
+    updateToken(token: string) {
+      localStorage.setItem('token', JSON.stringify(token));
     },
     /**
      * 创建出formData，并更新到本地

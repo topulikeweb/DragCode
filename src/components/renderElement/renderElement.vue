@@ -13,7 +13,7 @@
       :model="formData"
       :rules="rules"
       v-if="item.tag !== 'el-divider'"
-      status-icon
+      :status-icon="true"
     >
       <el-form-item :label="validate.label" :prop="validate.fieldName" class="renderElement">
         <el-col :span="Math.floor(validate.sliderSize / 4.5)">
@@ -34,15 +34,7 @@
             <div>{{ validate.textValue }}</div>
           </component>
 
-          <component
-            v-else
-            :is="item.tag"
-            :class="classes"
-            style="text-align: center"
-            @click.stop
-            :size="validate.size"
-            v-model="formData[validate.fieldName]"
-          >
+          <component v-else :is="item.tag" :class="classes" style="text-align: center" @click.stop :size="validate.size" v-model="formData[validate.fieldName]">
             <component
               v-if="item._opt_._val_?.staticData !== undefined"
               :is="item._opt_._val_.tag"
@@ -63,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import { IComponentType, IRenderElement } from '../../../type';
 import * as classNames from 'classnames';
 import { elements } from '../../UI';
@@ -72,12 +64,10 @@ import { formatDate } from '@vueuse/core';
 import { Store } from '../../pinia';
 import { formConf } from '../../UI/elements/form.ts';
 import { FormInstance } from 'element-plus';
-import { createFormData } from '../../UI/generate.ts';
 
 export default defineComponent({
   components: { Star, Check, Message, Delete, Edit },
   methods: {
-    createFormData,
     formatDate,
     elements() {
       return elements;
@@ -159,19 +149,19 @@ export default defineComponent({
       /**
        * 将设置的属性存入本地
        */
-      if (lists.value.length !== 0 && props.item.attrs) {
-        // const index = JSON.parse(localStorage.getItem('index') ?? '0');
-        const index = props.index;
-        // TODO 这里有一个bug导致数组更新问题
-        if (lists.value[index]?.attrs?.fieldName !== props.item?.attrs?.fieldName) {
-        }
-        if (index >= 0 && index < lists.value.length && lists.value[index]?.attrs?.fieldName === props.item?.attrs?.fieldName) {
-          lists.value[index].attrs = Object.assign({}, props.item.attrs);
-          Store().updateElementList(lists.value);
-          Store().updateRules();
-          Store().updateFromData();
-        }
-      }
+      // if (lists.value.length !== 0 && props.item.attrs) {
+      //   // / 深拷贝，不然数组会出现问题
+      //   const newLists = JSON.parse(JSON.stringify(lists.value));
+      //   const index = props.index;
+      //   // TODO 这里有一个bug导致数组更新问题
+      //   if (index >= 0 && index < newLists.length) {
+      //     // 删除第二个元素
+      //     newLists.splice(1, 1);
+      //     // 在第二个位置插入新元素
+      //     newLists.splice(1, 0, props.item.attrs);
+      //     Store().updateElementList(newLists);
+      //   }
+      // }
       // console.log(JSON.parse(lists.value)[JSON.parse(localStorage.getItem('index') ?? '0')].attrs, 111);
       return {
         size,
@@ -215,11 +205,22 @@ export default defineComponent({
         }
       });
     };
-    // watch(lists.value, () => {
-    //   console.log(123);
-    //   Store().updateRules();
-    //   Store().updateFromData();
-    // });
+    /**
+     * 监听validate的改变，如果改变了就更新数组，规则，变量
+     */
+    watch(validate, () => {
+      // / 深拷贝，不然数组会出现问题
+      const newLists = JSON.parse(JSON.stringify(lists.value));
+      const index = props.index;
+      // TODO 这里有一个bug导致数组更新问题
+      if (index >= 0 && index < newLists.length) {
+        newLists[index].attrs = props.item.attrs;
+        Store().updateElementList(newLists);
+        Store().updateRules();
+        Store().updateFromData();
+      }
+    });
+
     return {
       classes,
       validate,

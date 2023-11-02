@@ -1,12 +1,47 @@
 @import "../../styles/variables";
 
+/* 亮模式样式 */
 .el-space-style {
-  border: 1px $borderColor dotted;
-  width: 97%;
-  font-size: 14px;
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  &:hover {
+    background-color: #E0E0E0;
+  }
+
+  &:active {
+    background-color: #D0D0D0;
+  }
+
+  &:disabled {
+    background-color: #C0C0C0;
+    color: #808080;
+    cursor: not-allowed;
+  }
 }
 
+.renderElementMenu {
+  /* 共享的通用样式 */
+  margin: 10px;
+  padding: 10px;
+  background-color: #F8F8F8; /* 背景颜色设为浅灰色，符合 macOS 风格 */
+  border-radius: 5px; /* 圆角边框 */
+  font-size: 14px;
+  color: #000; /* 文本颜色设为黑色 */
+  width: 13vw;
+  transition: 1s all linear;
+  min-width: 13vw;
+}
+
+.simple-component {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+
+.keyName {
+  width: 50%;
+  height: 100%;
+  line-height: 200%;
+  text-align: center;
+}

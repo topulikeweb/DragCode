@@ -28,5 +28,8 @@ export default <IComponentType>{
     option: helper_tab('option配置', 'first', 'card'),
     require: helper_input_boolean('是否必填', false),
     fieldName: helper_Input('属性名', helper_getRandomStr()),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

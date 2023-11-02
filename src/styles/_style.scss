@@ -1,21 +1,20 @@
 @import "variables";
 
-
 * {
   margin: 0;
   padding: 0;
 }
 
-/*暗色
+/*深色
  */
 .dark {
   background-color: $darkBackGroundColor;
-  color: #fff9dc;
+  color: #ffffff; /* 文本颜色改为白色 */
 
   button {
     background-color: $darkButtonBackGroundColor;
     border: transparent;
-    color: $darkButtonFontColor;
+    color: #ffffff; /* 按钮文本颜色改为白色 */
   }
 
   .topContainer {
@@ -27,31 +26,194 @@
   }
 
   .sideBtn {
-    background-color: $darkButtonBackGroundColor2;
+    background-color: $infoBox; /* 保留 iOS 蓝色 */
     color: #fefefe;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 16px; /* 保持字体大小 */
+    font-weight: 600; /* 保持字体粗细 */
+    border: 1px solid $infoBox;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    line-height: 1.5;
+
+    &:hover {
+      background-color: $infoBox; /* 保留悬停时的样式 */
+    }
+
+    &:active {
+      background-color: $infoBox; /* 保留按下时的样式 */
+    }
+
+    &:disabled {
+      background-color: #c0c0c0; /* 保留禁用时的样式 */
+      color: #808080;
+      border: 1px solid #c0c0c0;
+      cursor: not-allowed;
+    }
   }
 
   .topContainer {
-    background-color: #3f455b;
+    background-color: #1e1e1e; /* macOS 深色主题的背景颜色 */
   }
 
   .sideContainer {
-    background-color: $containerDarkBackGroundColor;
+    background-color: #272727; /* 侧边栏背景颜色 */
   }
 
   .drawerPage {
-    background-color: $containerDarkBackGroundColor;
+    background-color: #1e1e1e; /* 抽屉页面背景颜色 */
   }
 
   .attrsMenus {
-    background-color: $containerDarkBackGroundColor;
+    background-color: #272727; /* 属性菜单背景颜色 */
   }
 
   .pointerBox:hover {
     background-color: $pointerDarkBackgroundColor;
   }
+
+  .el-space-style {
+    border: 1px dashed $borderColor;
+    width: 97%;
+    font-size: 14px;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222222; /* 暗黑背景颜色 */
+    color: #F0F0F0; /* 暗黑文本颜色 */
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #333333; /* 暗黑模式下的悬停背景颜色 */
+    }
+
+    &:active {
+      background-color: #111111; /* 暗黑模式下的激活背景颜色 */
+    }
+
+    &:disabled {
+      background-color: #444444; /* 暗黑模式下的禁用背景颜色 */
+      color: #808080;
+      cursor: not-allowed;
+    }
+  }
+
+  /* 页面容器样式 */
+  .drawerPage {
+    flex: 4.5;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    min-height: 90vh;
+    background-color: #1E1E1E; /* 深灰色背景 */
+    color: #FFFFFF; /* 白色文本颜色 */
+  }
+
+  .renderElementMenu {
+    /* 共享的通用样式 */
+    margin: 10px;
+    padding: 10px;
+    //border: 1px solid #D1D1D1;
+    /* 边框样式 *
+         border-radius: 5px; /* 圆角边框 */
+    font-size: 14px;
+    color: #fefefe; /* 文本颜色设为黑色 */
+    width: 13vw;
+    min-width: 13vw;
+    background-color: black;
+  }
+
+  /* 组件样式 */
+  .elementComponent {
+    transition: all 2s inherit;
+
+    .renderComponent {
+      padding-left: 5px;
+      border: 1px transparent solid;
+      transition: all 0.5s;
+    }
+
+    .renderComponent:hover {
+      border: 1px #333333 solid; /* 深灰色边框 */
+    }
+  }
+
+  .pointerBox {
+    position: relative;
+    display: flex;
+
+    .text {
+      flex: 1;
+      text-align: right;
+    }
+
+    &:hover {
+      background-color: #333333; /* 深灰色背景 */
+    }
+  }
+
+  .drawing-board {
+    height: 100%;
+    position: relative;
+
+    .components-body {
+      padding: 0;
+      margin: 0;
+      font-size: 0;
+    }
+
+    .sortable-ghost {
+      position: relative;
+      display: block;
+      overflow: hidden;
+
+      &::before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 3px;
+        background: #5959DF; /* 浅蓝色 */
+        z-index: 2;
+      }
+    }
+
+    .components-item.sortable-ghost {
+      width: 100%;
+      height: 60px;
+      background-color: #333333; /* 深灰色背景 */
+    }
+
+    .active-from-item {
+      & > .el-form-item {
+        background: #333333; /* 深灰色背景 */
+        border-radius: 6px;
+      }
+
+      & > .drawing-item-copy,
+      & > .drawing-item-delete {
+        display: initial;
+      }
+
+      & > .component-name {
+        color: #5959DF; /* 浅蓝色文本颜色 */
+      }
+    }
+
+    .el-form-item {
+      margin-bottom: 15px;
+    }
+  }
+
+
+  /* 链接样式 */
+  a {
+    color: #007AFF; /* 蓝色链接文本颜色 */
+    text-decoration: underline;
+  }
+
 }
 
 .hljs-container {

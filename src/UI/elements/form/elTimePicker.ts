@@ -4,7 +4,7 @@ import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio }
 
 export default <IComponentType>{
   _ID: '',
-  text: '时间选择器',
+  text: 'time',
   tagIcon: AlarmClock,
   tag: 'el-timePicker',
   isShowPointer: false,
@@ -26,6 +26,8 @@ export default <IComponentType>{
         value: 'large',
       },
     ]),
-    require: helper_input_boolean('是否必填', false),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

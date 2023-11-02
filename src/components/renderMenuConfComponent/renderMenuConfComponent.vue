@@ -1,55 +1,52 @@
 <template>
   <!--menuConf上的复杂组件和简单组件-->
-  <div class="renderElement">
+  <div class="renderElementMenu">
     <div v-if="!item._opt_">
-      <div class="keyName">{{ item.label ?? '' }}</div>
-      <component :is="item.tag" style="text-align: center" @click.stop v-model="item.el_value">
-        <div>{{ item.text }}</div>
-        <div>{{ item }}</div>
-      </component>
+      <div class="simple-component">
+        <div class="keyName">{{ item.label ?? '' }}</div>
+        <component :is="item.tag" style="text-align: center" @click.stop v-model="item.el_value">
+          <div>{{ item.text }}</div>
+          <div>{{ item }}</div>
+        </component>
+      </div>
     </div>
     <div v-else>
-      <div class="keyName">{{ item.label ?? '' }}</div>
-      <component :is="item.tag" style="text-align: center" @click.stop v-model="item.el_value" :type="item.type">
-        <component
-          v-if="item._opt_?._val_.staticData"
-          :is="item._opt_?._val_.tag"
-          v-for="opt in item._opt_?._val_.staticData"
-          :label="opt.value"
-          :value="opt.value"
-          :key="opt.index"
-          @click.stop
-          >{{ opt.key }}
-        </component>
-        <!--        option card组件-->
-        <div v-for="(el, index) in item._opt_?._val_.label" v-if="item._opt_?._val_.label">
+      <div class="simple-component">
+        <div class="keyName">{{ item.label ?? '' }}</div>
+        <component :is="item.tag" style="text-align: center" @click.stop v-model="item.el_value" :type="item.type">
           <component
+            v-if="item._opt_?._val_.staticData"
             :is="item._opt_?._val_.tag"
-            :label="el.label"
-            :name="el.name"
-            :value="item._opt_?._val_.value"
-            :key="index"
+            v-for="opt in item._opt_?._val_.staticData"
+            :label="opt.value"
+            :value="opt.value"
+            :key="opt.index"
             @click.stop
-          >
-            <div v-for="(item_child, index) in item._opt_._val_.option" style="font-size: 11px" v-if="el.label === '静态配置'">
-              <el-form-item :label="`label${index + 1}`">
-                <el-input v-model="item_child.key"></el-input>
-              </el-form-item>
-              <el-form-item :label="`value${index + 1}`">
-                <el-input v-model="item_child.value"></el-input>
-              </el-form-item>
-            </div>
-            <div style="font-size: 11px" v-else>
-              <el-form-item :label="`接口地址`">
-                <el-input placeholder="后端接口地址" v-model="url">
-                  <template #prepend>Http://</template>
-                </el-input>
-              </el-form-item>
-              <el-button size="small" @click="getOption">确认</el-button>
-            </div>
+            >{{ opt.key }}
           </component>
-        </div>
-      </component>
+          <!--        option card组件-->
+          <div v-for="(el, index) in item._opt_?._val_.label" v-if="item._opt_?._val_.label">
+            <component :is="item._opt_?._val_.tag" :label="el.label" :name="el.name" :value="item._opt_?._val_.value" :key="index" @click.stop>
+              <div v-for="(item_child, index) in item._opt_._val_.option" style="font-size: 11px" v-if="el.label === '静态配置'">
+                <el-form-item :label="`label${index + 1}`">
+                  <el-input v-model="item_child.key"></el-input>
+                </el-form-item>
+                <el-form-item :label="`value${index + 1}`">
+                  <el-input v-model="item_child.value"></el-input>
+                </el-form-item>
+              </div>
+              <div style="font-size: 11px" v-else>
+                <el-form-item :label="`接口地址`">
+                  <el-input placeholder="后端接口地址" v-model="url">
+                    <template #prepend>Http://</template>
+                  </el-input>
+                </el-form-item>
+                <el-button size="small" @click="getOption">确认</el-button>
+              </div>
+            </component>
+          </div>
+        </component>
+      </div>
     </div>
   </div>
 </template>

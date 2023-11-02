@@ -1,0 +1,30 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* 使其浮在其他内容之上 */
+}
+
+:deep(.el-card) {
+  width: 600px;
+  height: 500px;
+}
+
+:deep(.el-card .image) {
+  height: 300px;
+  width: 100%;
+  background-size: contain;
+}
+
+.inputBox {
+  width: 80%;
+  margin: 15px auto;
+  display: flex;
+  flex-direction: row;
+}

@@ -6,10 +6,25 @@
 }
 
 .flex {
+  width: 60%;
+  height: 100%;
   position: relative;
-  height: 4vh;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 5px;
+  //border: 1px solid #D1D1D1;
 }
 
 .toolbarBtn {
-  
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #F8F8F8;
+  color: #000000;
+  cursor: pointer;
+  font-size: 10px;
+
+  &:hover {
+    background-color: #E0E0E0;
+  }
 }

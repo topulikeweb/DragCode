@@ -4,7 +4,7 @@ import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_opt, he
 
 export default <IComponentType>{
   tag: 'el-select',
-  text: 'select选择',
+  text: 'select',
   _ID: '',
   tagIcon: Document,
   isShowPointer: false,
@@ -30,5 +30,8 @@ export default <IComponentType>{
     option: helper_tab('option配置', 'first', 'card'),
     defaultValue: helper_Input('默认值', 1),
     require: helper_input_boolean('是否必填', false),
+    rules: {
+      require: helper_input_boolean('是否必填', false),
+    },
   },
 };

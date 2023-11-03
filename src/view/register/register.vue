@@ -28,6 +28,7 @@ import { reactive } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import router from '../../router/index.ts';
+import { Store } from '../../pinia';
 
 let userInfo = reactive({
   username: '',

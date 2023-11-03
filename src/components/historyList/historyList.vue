@@ -30,9 +30,9 @@ const load = () => {
 const getHistoryList = () => {
   axios({
     method: 'GET',
-    url: 'http://127.0.0.1:3001/api/historyLists',
+    url: 'http://127.0.0.1:3001/lists/historyLists',
     headers: {
-      Authorization: 'Bearer' + Store().token,
+      Authorization: Store().token,
     },
   })
     .then((res) => {

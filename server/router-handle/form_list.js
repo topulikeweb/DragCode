@@ -8,15 +8,14 @@ const db = mysql.createPool({
 });
 
 exports.history_list = (req, res) => {
-  const sql1 = `SELECT history_id
+  const sql1 = `SELECT history_lists
                 FROM form_history
                 where userId = ?`;
-  db.query(sql1, (err, results) => {
+  db.query(sql1, [req.user.user.userId], (err, results) => {
     if (err) {
       return res.cc('获取历史记录失败', 400);
     }
-    const searchHistory = results.map((row) => row.history_lists);
-
-    return res.cc(searchHistory, 0);
+    console.log(results);
+    return res.cc(results, 0);
   });
 };

@@ -1,4 +1,3 @@
-const express = require('express');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
 const { secretKey } = require('../config/config');

@@ -10,6 +10,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import axios from 'axios';
+import { Store } from '../../pinia';
 
 const count = ref(10);
 const loading = ref(false);
@@ -22,6 +24,26 @@ const load = () => {
     loading.value = false;
   }, 2000);
 };
+/**
+ * 获取历史信息
+ */
+const getHistoryList = () => {
+  axios({
+    method: 'GET',
+    url: 'http://127.0.0.1:3001/api/historyLists',
+    headers: {
+      Authorization: 'Bearer' + Store().token,
+    },
+  })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+getHistoryList();
 </script>
 
 <style>

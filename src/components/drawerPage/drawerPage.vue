@@ -34,6 +34,7 @@
         </transition-group>
       </draggable>
     </el-form>
+    <el-button size="large" type="success" style="margin-top: 100px; margin-left: 30px" @click="finishDraw"> 完成绘制 </el-button>
   </div>
 
   <el-tabs type="border-card" class="demo-tabs">
@@ -81,6 +82,7 @@ import { ElMessage } from 'element-plus';
 import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
 import { helper_getRandomStr } from '../../UI/helper.ts';
 import { formConf } from '../../UI/elements/form.ts';
+import axios from 'axios';
 // 创建一个新的elementList防止出现Typescript判别类型错误的问题
 let newElementList = ref(Store().elementList);
 const formData = reactive({});
@@ -91,6 +93,13 @@ const visible = ref(false);
 let formConfig = ref({} as IFormConfig);
 const drawer = ref(false);
 formConfig.value = formConf;
+
+const props = defineProps({
+  getHistoryList: {
+    type: Function,
+    require: true,
+  },
+});
 /**
  * 是否展示指示箭头
  * @param e
@@ -205,6 +214,29 @@ const handleClose = () => {
     type: 'success',
   });
   drawer.value = false;
+};
+
+const finishDraw = () => {
+  axios({
+    method: 'POST',
+    url: 'http://127.0.0.1:3001/lists/updateHistory_lists',
+    data: {
+      elementList: Store().elementList,
+    },
+    headers: {
+      Authorization: Store().token,
+    },
+  })
+    .then((res) => {
+      console.log(res);
+      // 刷新历史列表数据
+      if (typeof props.getHistoryList === 'function') {
+        props.getHistoryList();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
 

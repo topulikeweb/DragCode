@@ -95,3 +95,11 @@ export interface IElementName {
   };
   fit: string | undefined;
 }
+
+/**
+ * 历史记录的数组
+ */
+export interface IHistoryList {
+  history_lists: Array<any>;
+  search_time: string;
+}

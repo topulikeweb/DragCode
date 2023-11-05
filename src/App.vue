@@ -9,7 +9,6 @@
       <Toolbar />
       <el-switch @change="handleToggleDark" v-model="theme" active-text="light" inactive-text="dark"></el-switch>
     </div>
-    <HistoryList></HistoryList>
     <router-view></router-view>
   </div>
 </template>
@@ -18,7 +17,6 @@
 import { useDark, useToggle } from '@vueuse/core';
 import { ref } from 'vue';
 import Toolbar from './components/toolbar/toolbar.vue';
-import HistoryList from './components/historyList/historyList.vue';
 
 let theme = ref<boolean>(false);
 const isDark = useDark();

@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { UploadFilled } from '@element-plus/icons-vue';
-import { helper_button, helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_button, helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio, helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   tag: 'el-upload',
@@ -11,6 +11,7 @@ export default <IComponentType>{
   _opt_: helper_button('文本'),
   value: '',
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     fieldName: helper_Input('属性名', helper_getRandomStr()),
     label: helper_Input('label', '文件上传'),
     text: helper_Input('按钮文本', '上传文件'),

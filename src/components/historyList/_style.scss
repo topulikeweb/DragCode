@@ -1,0 +1,66 @@
+.infinite-list-wrapper {
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  width: 200px;
+}
+
+.infinite-list-wrapper .list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.infinite-list-wrapper .list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100px;
+  width: 200px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
+  cursor: pointer; /* 添加鼠标手型 */
+  transition: background 0.3s; /* 添加背景颜色过渡效果 */
+
+  /* 添加点击效果 */
+  &:active {
+    background: var(--el-color-danger); /* 点击时的背景颜色 */
+    color: white; /* 点击时的文字颜色 */
+  }
+
+  /* 添加鼠标经过效果 */
+  &:hover {
+    background: var(--el-color-danger-light-7); /* 鼠标经过时的背景颜色 */
+  }
+}
+
+.infinite-list-wrapper .list-item + .list-item {
+  margin-top: 10px;
+}
+
+.clearBtn {
+  position: fixed;
+  bottom: 20px;
+  left: 30px;
+}
+
+/* CSS 样式 */
+p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  padding: 8px;
+  margin: 0;
+}
+
+p.loading {
+  color: #007AFF; /* macOS 风格的蓝色 */
+}
+
+p.no-more {
+  color: #888; /* 灰色文本，可根据你的喜好进行更改 */
+}
+
+

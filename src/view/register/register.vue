@@ -7,11 +7,11 @@
         <div class="bottom">
           <div class="inputBox">
             <span>username:</span>
-            <el-input style="margin-left: 40px" v-model="userInfo.password"></el-input>
+            <el-input style="margin-left: 40px" v-model="userInfo.username"></el-input>
           </div>
           <div class="inputBox">
             <span>password:</span>
-            <el-input style="margin-left: 40px" v-model="userInfo.username" type="password"></el-input>
+            <el-input style="margin-left: 40px" v-model="userInfo.password" type="password"></el-input>
           </div>
           <div class="inputBox">
             <el-button @click="router.push('/login')"> 去登录</el-button>
@@ -25,10 +25,9 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import router from '../../router/index.ts';
-import { Store } from '../../pinia';
+import { reqRegister } from '../../request';
 
 let userInfo = reactive({
   username: '',
@@ -38,14 +37,7 @@ let userInfo = reactive({
  * 注册
  */
 const register = () => {
-  axios({
-    method: 'POST',
-    url: 'http://127.0.0.1:3001/api/register',
-    data: userInfo,
-    headers: {
-      'Content-Type': 'application/json', // 指定请求头的 Content-Type 为 JSON
-    },
-  })
+  reqRegister(userInfo)
     .then((res) => {
       ElMessage({
         showClose: true,

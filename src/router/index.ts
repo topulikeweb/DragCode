@@ -33,7 +33,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userIsAuthenticated = Store().token;
-  if (to.path === '/' || to.path === '/login') {
+  if (to.path === '/' || to.path === '/login' || to.path === '/register') {
     // 如果用户访问首页或登录页，不执行认证检查
     next();
   } else {

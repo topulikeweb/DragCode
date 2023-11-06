@@ -4,4 +4,5 @@ const routerHandle = require('../router-handle/form_list');
 
 router.get('/historyLists', routerHandle.history_list);
 router.post('/updateHistory_lists', routerHandle.updateHistory_list);
+router.patch('/clearAllHistoryLists', routerHandle.clearAllHistoryList);
 module.exports = router;

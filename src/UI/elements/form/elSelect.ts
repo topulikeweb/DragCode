@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Document } from '@element-plus/icons-vue';
-import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_opt, helper_Radio, helper_tab } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_opt, helper_Radio, helper_slider, helper_tab } from '../../helper.ts';
 
 export default <IComponentType>{
   tag: 'el-select',
@@ -11,6 +11,7 @@ export default <IComponentType>{
   _opt_: helper_opt('select选择框', 'el-option'),
   value: '',
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     fieldName: helper_Input('属性名', helper_getRandomStr()),
     label: helper_Input('label', 'select框'),
     size: helper_Radio('尺寸', [

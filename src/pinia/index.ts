@@ -10,6 +10,7 @@ export const Store = defineStore('elementList', {
     formData: JSON.parse(<string>localStorage.getItem('formData') ?? '{}') as Object,
     rules: JSON.parse(<string>localStorage.getItem('rules') ?? '{}') as Object,
     token: JSON.parse(<string>localStorage.getItem('token')) ?? undefined,
+    userInfo: JSON.parse(<string>localStorage.getItem('userInfo') ?? '{}') as Object,
   }),
   getters: {},
   actions: {
@@ -99,6 +100,9 @@ export const Store = defineStore('elementList', {
       this.rules = rules;
       localStorage.setItem('rules', JSON.stringify(this.rules));
       console.log('rules发生更新');
+    },
+    updateUserInfo(userInfo: Record<string, any>) {
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
     },
   },
 });

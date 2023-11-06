@@ -29,7 +29,7 @@ export function convertAttrsToString(attrs: any) {
           valueStrings.push(`:text="${attrs[key].el_value}"`);
           break;
         case 'sliderSize':
-          formStrings.push(`label-width="${attrs[key].el_value}px"`);
+          formStrings.push(`label-width="${attrs[key].el_value * 10}px"`);
           break;
         case 'labelPosition':
           formStrings.push(`:label-position="${attrs[key].el_value}"`);
@@ -72,13 +72,11 @@ export function addChildren(_opt: any, _opt_: IComponentType['_opt_'], index: nu
     for (let i = 0; i < _opt?._val_?.option.length; i++) {
       childrenElement.push(
         `
-${indent}${indent}${indent}<${_opt_?._val_?.tag} label = "${_opt?._val_?.option[i].key}" value = "${_opt?._val_?.option[i].value}" ></${_opt_?._val_?.tag}>`,
+${indent}${indent}${indent}<${_opt_?._val_?.tag} label = '${_opt?._val_?.option[i].key}' value = '${_opt?._val_?.option[i].value}' ></${_opt_?._val_?.tag}>`,
       );
     }
   } else {
-    childrenElement.push(
-      `\n${indent}${indent}${indent}${indent}<${_opt_?._val_?.tag}>${lists[index].attrs.text.el_value}</${_opt_?._val_?.tag}>`,
-    );
+    childrenElement.push(`\n${indent}${indent}${indent}${indent}<${_opt_?._val_?.tag}>${lists[index].attrs.text.el_value}</${_opt_?._val_?.tag}>`);
   }
   console.log(childrenElement.join(' '));
   return childrenElement.join(' ');
@@ -97,7 +95,13 @@ export function renderHtml() {
   // 2. 使用模板字符串构建 HTML 代码
   const template = `
  <template>
-      <el-form ${formAttrs.formStrings} :model="${formModel}">
+      <el-form ${formAttrs.formStrings} :model='${formModel}' style='width: 50vw;border:1px solid #b2b2b2;
+        border-radius: 10px; 
+        position: absolute;
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%);'
+        rules='rules'>
         ${generateFormItems()}
       </el-form>
     </template>
@@ -118,13 +122,11 @@ export function renderHtml() {
             lists[i]._opt_,
             i,
           )}\n${indent}${indent}${indent}</${lists[i].tag}>`
-        : `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${(lists[i].attrs.text && lists[i].attrs.text.el_value) ?? ''}</${
-            lists[i].tag
-          }>`;
+        : `${indent}<${lists[i].tag} ${attrStrings} ${vModelDirective}>${(lists[i].attrs.text && lists[i].attrs.text.el_value) ?? ''}</${lists[i].tag}>`;
 
       formItems.push(`
-        <el-form-item ${formItemStrings} prop="${(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''}">
-        <el-col :span="${Math.floor(convertAttrsToString(lists[i].attrs).sliderSize / 4.5)}">
+        <el-form-item ${formItemStrings} prop='${(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''}'>
+        <el-col :span='${Math.floor(convertAttrsToString(lists[i].attrs).sliderSize / 1.8)}'>
           ${content}
           </el-col>
         </el-form-item>
@@ -143,8 +145,12 @@ export function renderHtml() {
 
   // 组装最终 HTML 结构
   HtmlElementLists.push(template);
-  HtmlElementLists.push(`<script lang="ts" setup>`);
-  HtmlElementLists.push(requiredRecourse());
+  HtmlElementLists.push(`<script lang='ts' setup>`);
+  // HtmlElementLists.push(requiredRecourse());
+  // 防止出现逗号，将requireRecourse数组拆开然后放入
+  for (let i = 0; i < requiredRecourse().length; i++) {
+    HtmlElementLists.push(requiredRecourse()[i]);
+  }
   HtmlElementLists.push(`const ${formConf.attrs.ref.el_value}=reactive<FormInstance>()`);
   HtmlElementLists.push(createFormData());
   HtmlElementLists.push(createRequestFn());
@@ -234,7 +240,8 @@ export function createFormData() {
  */
 export function requiredRecourse() {
   const recourseData = [];
-  recourseData.push(`import {reactive} from 'vue'`);
+  recourseData.push(`import {reactive} from 'vue';`);
+  recourseData.push(`import type { FormInstance, FormRules } from 'element-plus';`);
   return recourseData;
 }
 
@@ -244,7 +251,7 @@ export function requiredRecourse() {
 export function createRequestFn() {
   return `const submitFn = ${async (formEl: FormInstance) => {
     if (!formEl) return;
-    await formEl.validate((valid, fields) => {
+    await formEl.validate((valid: any, fields: any) => {
       if (valid) {
         console.log('submit!');
       } else {
@@ -286,7 +293,7 @@ function createRules() {
     }
   }
   console.log(rules);
-  return `const rules = reactive(${JSON.stringify(rules, null, 2)})`;
+  return `const rules:FormRules = reactive(${JSON.stringify(rules, null, 2)})`;
 }
 
 // const arr = [

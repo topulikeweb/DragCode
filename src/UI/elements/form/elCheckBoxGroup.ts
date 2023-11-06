@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { CircleCheck } from '@element-plus/icons-vue';
-import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_opt, helper_Radio, helper_tab } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_opt, helper_Radio, helper_slider, helper_tab } from '../../helper.ts';
 
 export default <IComponentType>{
   tag: 'el-checkbox-group',
@@ -11,6 +11,7 @@ export default <IComponentType>{
   value: '',
   _opt_: helper_opt('选项框', 'el-checkbox-button'),
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     size: helper_Radio('尺寸', [
       {
         key: 'small',

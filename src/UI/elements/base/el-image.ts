@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Grid } from '@element-plus/icons-vue';
-import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_getRandomStr, helper_Input, helper_input_boolean, helper_Radio, helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -10,6 +10,7 @@ export default <IComponentType>{
   isShowPointer: false,
   value: '',
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     src: helper_Input('图片地址（http/https）', 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'),
     fit: helper_Radio('fit', [
       {

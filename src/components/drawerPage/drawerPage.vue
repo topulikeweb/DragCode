@@ -34,7 +34,21 @@
         </transition-group>
       </draggable>
     </el-form>
-    <el-button size="large" type="success" style="margin-top: 100px; margin-left: 30px" @click="finishDraw"> 完成绘制 </el-button>
+    <el-button size="large" type="success" style="margin-top: 100px; margin-left: 30px" @click="dialogFormVisible = true"> 完成绘制 </el-button>
+    <!--确认对话框-->
+    <el-dialog v-model="dialogFormVisible" title="附上描述" style="width: 500px">
+      <el-form :model="form">
+        <el-form-item label="绘制描述" :label-width="formLabelWidth">
+          <el-input v-model="form.desc" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消创建</el-button>
+          <el-button type="primary" @click="finishDraw"> 确认创建 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 
   <el-tabs type="border-card" class="demo-tabs">
@@ -83,6 +97,7 @@ import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfCo
 import { helper_getRandomStr } from '../../UI/helper.ts';
 import { formConf } from '../../UI/elements/form.ts';
 import axios from 'axios';
+import { reqFinishDraw } from '../../request';
 // 创建一个新的elementList防止出现Typescript判别类型错误的问题
 let newElementList = ref(Store().elementList);
 const formData = reactive({});
@@ -92,8 +107,13 @@ let menuConf = ref<IComponentType>({} as IComponentType);
 const visible = ref(false);
 let formConfig = ref({} as IFormConfig);
 const drawer = ref(false);
+const dialogFormVisible = ref(false);
+const formLabelWidth = '100px';
 formConfig.value = formConf;
 
+const form = reactive({
+  desc: '',
+});
 const props = defineProps({
   getHistoryList: {
     type: Function,
@@ -172,6 +192,7 @@ const onDragEnd = () => {
 };
 let lists = computed({
   get() {
+    console.log(123);
     return newElementList.value;
   },
   set(newVal: any[]) {
@@ -215,24 +236,19 @@ const handleClose = () => {
   });
   drawer.value = false;
 };
-
+/**
+ * 完成创建
+ */
 const finishDraw = () => {
-  axios({
-    method: 'POST',
-    url: 'http://127.0.0.1:3001/lists/updateHistory_lists',
-    data: {
-      elementList: Store().elementList,
-    },
-    headers: {
-      Authorization: Store().token,
-    },
-  })
+  reqFinishDraw(form.desc)
     .then((res) => {
       console.log(res);
       // 刷新历史列表数据
       if (typeof props.getHistoryList === 'function') {
         props.getHistoryList();
       }
+      // 关闭对话框
+      dialogFormVisible.value = false;
     })
     .catch((error) => {
       console.log(error);

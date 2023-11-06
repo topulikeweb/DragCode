@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Minus } from '@element-plus/icons-vue';
-import { helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_Input, helper_input_boolean, helper_Radio, helper_slider } from '../../helper.ts';
 
 export default <IComponentType>{
   _ID: '',
@@ -10,6 +10,7 @@ export default <IComponentType>{
   isShowPointer: false,
   value: '',
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     divider_Value: helper_Input('文本', '分割线'),
     position: helper_Radio('位置', [
       {

@@ -11,6 +11,7 @@ exports.history_list = (req, res) => {
   const sql1 = `SELECT history_lists, search_time
                 FROM form_history
                 where userId = ?`;
+  // token解析出来后数据挂载到req.user.user.userId
   db.query(sql1, [req.user.user.userId], (err, results) => {
     if (err) {
       return res.cc('获取历史记录失败', 0);
@@ -28,7 +29,7 @@ exports.history_list = (req, res) => {
 };
 
 exports.updateHistory_list = (req, res) => {
-  const { elementList, desc = '快速创建的表单' } = req.body;
+  let { elementList, desc } = req.body;
   const sql1 = `SELECT history_lists
                 FROM form_history
                 WHERE userId = ?`;
@@ -39,7 +40,9 @@ exports.updateHistory_list = (req, res) => {
 
     // 默认为空数组
     let existingList = [];
-
+    if (desc === '') {
+      desc = '快速创建的表单';
+    }
     if (results[0].history_lists) {
       try {
         existingList = JSON.parse(results[0].history_lists); // 解析已有的列表
@@ -77,5 +80,18 @@ exports.updateHistory_list = (req, res) => {
     } else {
       return res.cc('没有数据传入', 0);
     }
+  });
+};
+
+exports.clearAllHistoryList = (req, res) => {
+  const sql = `UPDATE form_history
+               SET history_lists = NULL
+               WHERE userId = ?;
+  `;
+  db.query(sql, [req.user.user.userId], (err, result) => {
+    if (err) {
+      return res.cc('清除失败' + err, 0);
+    }
+    res.cc('清除成功', 1);
   });
 };

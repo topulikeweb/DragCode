@@ -29,6 +29,7 @@
         <el-button size="small" style="margin-left: 400px; background-color: #007aff; color: #ffffff" class="toolbarBtn"> 退出登录 </el-button>
       </template>
     </el-popconfirm>
+    <div class="usernameBtn">Hi {{ userInfo }}</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -42,6 +43,8 @@ const router = useRouter();
 const centerDialogVisible = ref(false);
 const elementList = reactive(Store().elementList);
 const fullscreenLoading = ref(false);
+const userInfo = ref(Store().userInfo.username);
+console.log(userInfo.value);
 /**
  * 清空页面上创建出来的组件
  */

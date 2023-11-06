@@ -7,16 +7,16 @@
         <div class="bottom">
           <div class="inputBox">
             <span>username:</span>
-            <el-input style="margin-left: 40px" v-model="userInfo.password"></el-input>
+            <el-input style="margin-left: 40px" v-model="userInfo.username"></el-input>
           </div>
           <div class="inputBox">
             <span>password:</span>
-            <el-input style="margin-left: 40px" v-model="userInfo.username" type="password"></el-input>
+            <el-input style="margin-left: 40px" v-model="userInfo.password" type="password"></el-input>
           </div>
 
           <div class="inputBox">
             <el-button @click="login">登录</el-button>
-            <div class="registerBox" @click="router.push('/register  ')">没有账号?去注册</div>
+            <div class="registerBox" @click="router.push('/register')">没有账号?去注册</div>
           </div>
         </div>
       </div>
@@ -26,10 +26,10 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import { Store } from '../../pinia';
 import router from '../../router/index.ts';
+import { reqLogin } from '../../request';
 
 let userInfo = reactive({
   username: '',
@@ -39,14 +39,7 @@ let userInfo = reactive({
  * 登录
  */
 const login = () => {
-  axios({
-    method: 'POST',
-    url: 'http://127.0.0.1:3001/api/login',
-    data: userInfo,
-    headers: {
-      'Content-Type': 'application/json', // 指定请求头的 Content-Type 为 JSON
-    },
-  })
+  reqLogin(userInfo)
     .then((res) => {
       ElMessage({
         showClose: true,
@@ -57,9 +50,12 @@ const login = () => {
       // 更新token
       Store().updateToken(res.data.token);
       router.push('/drawPageView');
+      // 存入token创建的时间
+      localStorage.setItem('tokenCreationTime', JSON.stringify(Date.now()));
+      // 存入用户信息
+      Store().updateUserInfo(userInfo);
     })
     .catch((error) => {
-      console.log(error);
       ElMessage({
         showClose: true,
         message: error,

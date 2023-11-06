@@ -1,6 +1,6 @@
 import { IComponentType } from '../../../../type';
 import { Files } from '@element-plus/icons-vue';
-import { helper_Input, helper_input_boolean, helper_Radio } from '../../helper.ts';
+import { helper_Input, helper_input_boolean, helper_Radio, helper_slider } from '../../helper.ts';
 import { Star, Check, Message, Delete, Edit } from '@element-plus/icons-vue';
 
 export default <IComponentType>{
@@ -13,6 +13,7 @@ export default <IComponentType>{
   value: '',
   isShowPointer: false,
   attrs: {
+    labelWidth: helper_slider('尺寸', 30),
     size: helper_Radio('尺寸', [
       {
         key: 'small',

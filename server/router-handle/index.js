@@ -28,7 +28,7 @@ exports.login = (req, res) => {
 
     const user = results[0];
     // 生成 JWT
-    const token = jwt.sign({ user }, secretKey, { expiresIn: '2h' });
+    const token = jwt.sign({ user }, secretKey, { expiresIn: '10h' });
     console.log(token);
     res.status(200).json({ token, message: '登录成功' });
   });

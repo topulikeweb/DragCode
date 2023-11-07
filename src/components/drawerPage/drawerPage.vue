@@ -54,7 +54,7 @@
   <el-tabs type="border-card" class="demo-tabs">
     <el-tab-pane label="组件属性">
       <el-scrollbar height="80vh">
-        <RenderElement :item="menuConf"></RenderElement>
+        <RenderElement :item="menuConf" :index="index"></RenderElement>
         <!--        删除操作-->
         <el-popover :visible="visible" placement="top" :width="160">
           <p>确认删除吗？</p>
@@ -96,7 +96,6 @@ import { ElMessage } from 'element-plus';
 import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
 import { helper_getRandomStr } from '../../UI/helper.ts';
 import { formConf } from '../../UI/elements/form.ts';
-import axios from 'axios';
 import { reqFinishDraw } from '../../request';
 // 创建一个新的elementList防止出现Typescript判别类型错误的问题
 let newElementList = ref(Store().elementList);
@@ -110,7 +109,7 @@ const drawer = ref(false);
 const dialogFormVisible = ref(false);
 const formLabelWidth = '100px';
 formConfig.value = formConf;
-
+const index = ref(Store().index as number);
 const form = reactive({
   desc: '',
 });

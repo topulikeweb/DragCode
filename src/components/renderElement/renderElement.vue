@@ -44,7 +44,7 @@
               :key="opt.key"
               @click.stop
             ></component>
-            <component v-else :is="item._opt_._val_?.tag">
+            <component v-else :is="item._opt_._val_?.tag as string">
               {{ validate.textValue }}
             </component>
           </component>
@@ -96,7 +96,7 @@ export default defineComponent({
     const classes = ref('');
     const lists = ref(JSON.parse(localStorage.getItem('elementList') || '{}'));
     const formConfig = ref(formConf);
-    const formRef = ref<FormInstance>();
+    const formRef = ref();
     let formData = reactive<any>(Store().formData);
     const rules = reactive(Store().rules);
     /**
@@ -146,23 +146,6 @@ export default defineComponent({
       const action = props.item.attrs?.action?.el_value;
       const rule = formConfig.value.attrs.rule.el_value;
       const ref = formConfig.value.attrs.ref.el_value;
-      /**
-       * 将设置的属性存入本地
-       */
-      // if (lists.value.length !== 0 && props.item.attrs) {
-      //   // / 深拷贝，不然数组会出现问题
-      //   const newLists = JSON.parse(JSON.stringify(lists.value));
-      //   const index = props.index;
-      //   // TODO 这里有一个bug导致数组更新问题
-      //   if (index >= 0 && index < newLists.length) {
-      //     // 删除第二个元素
-      //     newLists.splice(1, 1);
-      //     // 在第二个位置插入新元素
-      //     newLists.splice(1, 0, props.item.attrs);
-      //     Store().updateElementList(newLists);
-      //   }
-      // }
-      // console.log(JSON.parse(lists.value)[JSON.parse(localStorage.getItem('index') ?? '0')].attrs, 111);
       return {
         size,
         textValue,
@@ -196,14 +179,15 @@ export default defineComponent({
      * 为按钮绑定提交事件
      */
     const requestData = async (formEl: FormInstance) => {
-      if (!formEl) return;
-      await formEl.validate((valid, fields) => {
-        if (valid) {
-          console.log('submit!');
-        } else {
-          console.log('error submit!', fields);
-        }
-      });
+      if (formRef.value) {
+        await formEl.validate((valid, fields) => {
+          if (valid) {
+            console.log('submit!');
+          } else {
+            console.log('error submit!', fields);
+          }
+        });
+      }
     };
     /**
      * 监听validate的改变，如果改变了就更新数组，规则，变量
@@ -212,7 +196,6 @@ export default defineComponent({
       // / 深拷贝，不然数组会出现问题
       const newLists = JSON.parse(JSON.stringify(lists.value));
       const index = props.index;
-      // TODO 这里有一个bug导致数组更新问题
       if (index >= 0 && index < newLists.length) {
         newLists[index].attrs = props.item.attrs;
         Store().updateElementList(newLists);

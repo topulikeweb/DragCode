@@ -103,3 +103,8 @@ export interface IHistoryList {
   history_lists: Array<any>;
   search_time: string;
 }
+
+export interface IUserInfo {
+  username: string;
+  password: string;
+}

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { IComponentType } from '../../type';
+import { IComponentType, IUserInfo } from '../../type';
 import { formConf } from '../UI/elements/form.ts';
 
 export const Store = defineStore('elementList', {
@@ -10,7 +10,7 @@ export const Store = defineStore('elementList', {
     formData: JSON.parse(<string>localStorage.getItem('formData') ?? '{}') as Object,
     rules: JSON.parse(<string>localStorage.getItem('rules') ?? '{}') as Object,
     token: JSON.parse(<string>localStorage.getItem('token')) ?? undefined,
-    userInfo: JSON.parse(<string>localStorage.getItem('userInfo') ?? '{}') as Object,
+    userInfo: JSON.parse(<string>localStorage.getItem('userInfo') ?? '{}') as IUserInfo,
   }),
   getters: {},
   actions: {

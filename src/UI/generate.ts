@@ -101,7 +101,7 @@ export function renderHtml() {
         top: 50%; 
         left: 50%; 
         transform: translate(-50%, -50%);'
-        rules='rules'>
+        rules='${formConf.attrs.rule.el_value}'>
         ${generateFormItems()}
       </el-form>
     </template>
@@ -221,7 +221,11 @@ export const vCode = {
 export function createFormData() {
   const lists = Store().elementList;
   // 创建一个变量名为 formConf.attrs.formModel.el_value 的对象
-  const isObject: { [key: string]: { [key: string]: string } } = {
+  const isObject: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  } = {
     [formConf.attrs.formModel.el_value]: {},
   };
   for (let i = 0; i < lists.length; i++) {
@@ -278,7 +282,7 @@ function createRules() {
           minMaxObject['trigger'] = 'blur';
         } else {
           let rulesItemObj = {} as any;
-          rulesItemObj[key] = parseInt(lists[i].attrs.rules[key].el_value);
+          rulesItemObj[key] = lists[i].attrs.rules[key].el_value;
           rulesItemObj['message'] = 'You broke the rules';
           rulesItemObj['trigger'] = 'blur';
           rulesFiledName.push(rulesItemObj);

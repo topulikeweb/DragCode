@@ -8,22 +8,16 @@ const db = mysql.createPool({
 });
 
 exports.history_list = (req, res) => {
-  const sql1 = `SELECT history_lists, search_time
-                FROM form_history
+  const sql1 = `SELECT history_lists
+                FROM logininfo
                 where userId = ?`;
   // token解析出来后数据挂载到req.user.user.userId
+  console.log(req.user.user.userId);
   db.query(sql1, [req.user.user.userId], (err, results) => {
+    console.log(err);
     if (err) {
       return res.cc('获取历史记录失败', 0);
     }
-    // 格式化时间信息
-    const originalDate = new Date(results[0].search_time);
-
-    const year = originalDate.getUTCFullYear();
-    const month = originalDate.getUTCMonth() + 1; // 月份从0开始，所以要加1
-    const day = originalDate.getUTCDate();
-    const formattedDateStr = `${year.toString()}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    results[0].search_time = formattedDateStr;
     return res.cc(results, 0);
   });
 };
@@ -31,7 +25,7 @@ exports.history_list = (req, res) => {
 exports.updateHistory_list = (req, res) => {
   let { elementList, desc } = req.body;
   const sql1 = `SELECT history_lists
-                FROM form_history
+                FROM logininfo
                 WHERE userId = ?`;
   db.query(sql1, [req.user.user.userId], (err, results) => {
     if (err) {
@@ -43,6 +37,7 @@ exports.updateHistory_list = (req, res) => {
     if (desc === '') {
       desc = '快速创建的表单';
     }
+    console.log(req.user.user);
     if (results[0].history_lists) {
       try {
         existingList = JSON.parse(results[0].history_lists); // 解析已有的列表
@@ -68,7 +63,7 @@ exports.updateHistory_list = (req, res) => {
       obj['createTime'] = formattedDate;
       existingList.push(obj); // 将新元素添加到列表
       // 更新对应userId的history_lists的数据
-      const sql2 = `UPDATE form_history
+      const sql2 = `UPDATE logininfo
                     SET history_lists = ?
                     WHERE userId = ?`;
       db.query(sql2, [JSON.stringify(existingList), req.user.user.userId], (err, results) => {
@@ -84,7 +79,7 @@ exports.updateHistory_list = (req, res) => {
 };
 
 exports.clearAllHistoryList = (req, res) => {
-  const sql = `UPDATE form_history
+  const sql = `UPDATE logininfo
                SET history_lists = NULL
                WHERE userId = ?;
   `;

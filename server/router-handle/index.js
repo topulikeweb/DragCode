@@ -51,7 +51,7 @@ exports.register = (req, res) => {
     if (err) {
       return res.cc('注册失败', 1);
     }
-
+    // 注册成功之后，要让form_history这张表也新增用户
     const sql2 = `INSERT INTO logininfo
                   SET ?`;
 

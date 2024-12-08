@@ -13,7 +13,8 @@
         :fallback-on-body="true"
       >
         <transition-group>
-          <div v-for="(item, index) in lists" class="elementComponent" @click="showPointer(item), getMenuConf(index)" :key="index">
+          <div v-for="(item, index) in lists" class="elementComponent"
+               @click="showPointer(item), getMenuConf(index)" :key="index">
             <div class="pointerBox" @click.stop="moveUp(item)" :key="index">
               <div class="text" v-if="item.isShowPointer">move up</div>
               <el-icon v-if="item.isShowPointer" size="large" class="pointer">
@@ -21,7 +22,8 @@
               </el-icon>
             </div>
             <div class="elementItem">
-              <render-element :item="item" style="width: 95%" :list="lists" :key="item._ID" :index="index"></render-element>
+              <render-element :item="item" style="width: 95%" :list="lists"
+                              :key="item._ID" :index="index"></render-element>
               <div class="infoBox"></div>
             </div>
             <div class="pointerBox" @click.stop="moveDown(item)">
@@ -34,9 +36,13 @@
         </transition-group>
       </draggable>
     </el-form>
-    <el-button size="large" type="success" style="margin-top: 100px; margin-left: 30px" @click="dialogFormVisible = true"> 完成绘制 </el-button>
+    <el-button size="large" type="success"
+               style="margin-top: 100px; margin-left: 30px"
+               @click="dialogFormVisible = true"> 完成绘制
+    </el-button>
     <!--确认对话框-->
-    <el-dialog v-model="dialogFormVisible" title="附上描述" style="width: 500px">
+    <el-dialog v-model="dialogFormVisible" title="附上描述"
+               style="width: 500px">
       <el-form :model="form">
         <el-form-item label="绘制描述" :label-width="formLabelWidth">
           <el-input v-model="form.desc" autocomplete="off" />
@@ -59,28 +65,43 @@
         <el-popover :visible="visible" placement="top" :width="160">
           <p>确认删除吗？</p>
           <div style="text-align: right; margin: 0">
-            <el-button size="small" text @click="visible = false">取消 </el-button>
-            <el-button size="small" type="primary" @click="deleteElement"> 确认 </el-button>
+            <el-button size="small" text @click="visible = false">取消
+            </el-button>
+            <el-button size="small" type="primary" @click="deleteElement">
+              确认
+            </el-button>
           </div>
           <template #reference>
-            <el-button type="danger" size="small" style="margin-top: 20px" @click="visible = true">删除 </el-button>
+            <el-button type="danger" size="small" style="margin-top: 20px"
+                       @click="visible = true">删除
+            </el-button>
           </template>
         </el-popover>
-        <el-button type="info" size="small" style="margin-top: 20px; margin-left: 10px" @click="copyElement"> 复制 </el-button>
+        <el-button type="info" size="small"
+                   style="margin-top: 20px; margin-left: 10px"
+                   @click="copyElement"> 复制
+        </el-button>
         <el-divider>属性面板</el-divider>
-        <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs ?? {}" :item="item" :key="index" class="renderElement" />
+        <RenderMenuConfComponent v-for="(item, index) in menuConf.attrs ?? {}"
+                                 :item="item" :key="index"
+                                 class="renderElement" />
         <div style="width: 100%; height: 10vh"></div>
       </el-scrollbar>
       <!--      添加规则按钮-->
       <el-button @click="drawer = true">添加规则</el-button>
     </el-tab-pane>
     <el-tab-pane label="表单属性">
-      <RenderMenuConfComponent v-for="(item, index) in formConfig.attrs ?? {}" :item="item" :key="index" class="renderElement" />
+      <RenderMenuConfComponent v-for="(item, index) in formConfig.attrs ?? {}"
+                               :item="item" :key="index"
+                               class="renderElement" />
     </el-tab-pane>
   </el-tabs>
 
-  <el-drawer v-model="drawer" title="添加你的规则" :before-close="handleClose" size="400">
-    <RenderMenuConfComponent v-for="(item, index) in (menuConf.attrs && menuConf.attrs.rules) ?? {}" :item="item" :key="index" class="renderElement" />
+  <el-drawer v-model="drawer" title="添加你的规则" :before-close="handleClose"
+             size="400">
+    <RenderMenuConfComponent
+      v-for="(item, index) in (menuConf.attrs && menuConf.attrs.rules) ?? {}"
+      :item="item" :key="index" class="renderElement" />
   </el-drawer>
 
   <router-view></router-view>
@@ -93,7 +114,8 @@ import { computed, reactive, ref } from 'vue';
 import { Bottom, Top } from '@element-plus/icons-vue';
 import { IComponentType, IFormConfig } from '../../../type';
 import { ElMessage } from 'element-plus';
-import RenderMenuConfComponent from '../renderMenuConfComponent/renderMenuConfComponent.vue';
+import RenderMenuConfComponent
+  from '../renderMenuConfComponent/renderMenuConfComponent.vue';
 import { helper_getRandomStr } from '../../UI/helper.ts';
 import { formConf } from '../../UI/elements/form.ts';
 import { reqFinishDraw } from '../../request';

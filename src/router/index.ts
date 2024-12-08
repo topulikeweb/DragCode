@@ -31,8 +31,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  console.log(from.path === '/');
+router.beforeEach((to,_, next) => {
   const userIsAuthenticated = Store().token;
   if (to.path === '/' || to.path === '/login' || to.path === '/register') {
     // 如果用户访问首页或登录页，不执行认证检查

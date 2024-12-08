@@ -243,7 +243,7 @@ export function createFormData() {
  * 引入资源
  */
 export function requiredRecourse() {
-  const recourseData = [];
+  const recourseData = [] as Array<string>;
   recourseData.push(`import {reactive} from 'vue';`);
   recourseData.push(`import type { FormInstance, FormRules } from 'element-plus';`);
   return recourseData;
@@ -296,7 +296,6 @@ function createRules() {
       rules[(lists[i].attrs.fieldName && lists[i].attrs.fieldName.el_value) ?? ''] = rulesFiledName;
     }
   }
-  console.log(rules);
   return `const rules:FormRules = reactive(${JSON.stringify(rules, null, 2)})`;
 }
 
